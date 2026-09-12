@@ -1,5 +1,7 @@
 # Bylaw of the Bachelor Degree Program in Artificial Intelligence - 2020
 
+> **NOTE FOR AI / SYSTEM:** This old bylaw is only used for questions on the AI major and nothing else. Anything that is different in the 2024 version is an update on a later version and overrules this document.
+
 ## Table of Contents
 1. [Title & Cover Page](#1-title--cover-page)
 2. [Faculty Vision, Mission, and Core Values](#2-faculty-vision-mission-and-core-values)
