@@ -6,8 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { PrerequisiteTag } from "@/components/ui/prerequisite-tag";
 import { MajorDropdown } from "@/components/ui/major-dropdown";
 import { ElectiveInfo } from "@/components/ui/elective-info";
-import { ArrowLeft, Clock, Tag, CaretDown } from "@phosphor-icons/react/dist/ssr";
-import { majors } from "@/components/ui/major-bento";
+import { ArrowLeft, Clock, Tag, CaretDown, Cpu, Database, Brain, ChartLineUp, PresentationChart } from "@phosphor-icons/react/dist/ssr";
 
 const majorNames: Record<string, string> = {
   Computer_Science: "Computer Science",
@@ -15,6 +14,14 @@ const majorNames: Record<string, string> = {
   Artificial_Intelligence: "Artificial Intelligence",
   Decision_Support_and_Operations_Research: "Decision Support & Operations Research",
   Information_Technology: "Information Technology",
+};
+
+const majorIcons: Record<string, React.ElementType> = {
+  Computer_Science: Cpu,
+  Information_Systems: Database,
+  Artificial_Intelligence: Brain,
+  Decision_Support_and_Operations_Research: ChartLineUp,
+  Information_Technology: PresentationChart,
 };
 
 export default async function MajorPage({ params }: { params: { id: string } }) {
@@ -129,7 +136,7 @@ export default async function MajorPage({ params }: { params: { id: string } }) 
       <div className="container" style={{ paddingTop: '4rem', paddingBottom: '6rem', maxWidth: '900px' }}>
         <header style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg-outer)', padding: '1rem', borderRadius: '1.5rem', marginBottom: '1.5rem', color: 'var(--foreground)' }}>
-            {majors.find(m => m.id === id)?.icon ? React.cloneElement(majors.find(m => m.id === id)!.icon as React.ReactElement<any>, { size: 48, weight: "light" }) : null}
+            {majorIcons[id] && React.createElement(majorIcons[id], { size: 48, weight: "light" })}
           </div>
           <h1 style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>{majorData.title}</h1>
           <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto', opacity: 0.8 }}>
