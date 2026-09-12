@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { PrerequisiteTag } from "@/components/ui/prerequisite-tag";
 import { MajorDropdown } from "@/components/ui/major-dropdown";
 import { ElectiveInfo } from "@/components/ui/elective-info";
-import { ArrowLeft, Clock, Tag, CaretDown, Cpu, Database, Brain, ChartLineUp, Network } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, Clock, Tag, CaretDown, Cpu, Database, Brain, ChartLineUp, DesktopTower } from "@phosphor-icons/react/dist/ssr";
 
 const majorNames: Record<string, string> = {
   Computer_Science: "Computer Science",
@@ -21,7 +21,7 @@ const majorIcons: Record<string, React.ElementType> = {
   Information_Systems: Database,
   Artificial_Intelligence: Brain,
   Decision_Support_and_Operations_Research: ChartLineUp,
-  Information_Technology: Network,
+  Information_Technology: DesktopTower,
 };
 
 export default async function MajorPage({ params }: { params: { id: string } }) {
