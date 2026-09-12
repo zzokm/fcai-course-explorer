@@ -92,9 +92,27 @@ export async function POST(req: Request) {
     4. ACCURACY: Answer the user's questions based ONLY on the following official context from the bylaws and course data.
     5. UNKNOWN INFO: If the answer is not contained in the context, clearly state that you do not know or cannot find it in the official documents. Do NOT make up information.
     
+    <ALWAYS_AVAILABLE_FACTS>
+    ## Minimum Cumulative GPA Requirements for Major Selection (FCAI)
+    
+    These are the **official minimum GPA thresholds** a student must meet to be eligible for each major. These values are fixed until officially updated.
+    
+    | Major | Minimum GPA |
+    |---|---|
+    | Information Systems (IS) | 2.70 |
+    | Computer Science (CS) | 2.56 |
+    | Artificial Intelligence (AI) | 2.39 |
+    | Decision Support & Operations Research (DS/OR) | 1.60 |
+    | Information Technology (IT) | 1.51 |
+    
+    If a student's GPA meets or exceeds a major's minimum, they are eligible to select it. If their GPA is below the threshold, they are generally not eligible unless policies change.
+    When a student asks about their options given a GPA, you MUST compare their GPA against this table and list every major they qualify for.
+    </ALWAYS_AVAILABLE_FACTS>
+
     <CONTEXT>
     ${contextText}
     </CONTEXT>`;
+
 
     // 4. Call the selected provider using BYOK
     const customProvider = getProviderClient(provider, apiKey, customBaseUrl);
