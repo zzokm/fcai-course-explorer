@@ -434,7 +434,7 @@ export function AdvisorChatbot() {
             </div>
 
             {/* Content Area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
               
               {!hasAcceptedDisclaimer ? (
                 /* Disclaimer Screen */

@@ -200,8 +200,6 @@ small { font-size: 0.875rem; opacity: 0.5; }
 @media (min-width: 1024px) {
   .chatbox-window {
     max-width: 440px;
-  .chatbox-window {
-    max-width: 440px;
     height: 680px;
   }
 }
