@@ -8,7 +8,7 @@ import { CustomDropdown } from "./custom-dropdown";
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
   { id: "anthropic", name: "Anthropic", defaultModel: "claude-3-5-sonnet-20240620" },
-  { id: "google", name: "Google Gemini", defaultModel: "gemini-3.6-flash" },
+  { id: "google", name: "Google Gemini", defaultModel: "gemini-1.5-flash" },
   { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "openrouter", name: "OpenRouter", defaultModel: "meta-llama/llama-3.1-8b-instruct:free" },
 ];
@@ -227,12 +227,22 @@ export function AdvisorChatbot() {
       }
 
       if (fullText.trim() === "") {
-        // Remove the empty message bubble
-        setMessages(prev => prev.filter(m => m.id !== aiMsgId));
-        throw new Error("The AI provider returned an empty response. The selected model may be deprecated, unavailable, or your API key lacks access.");
+        setMessages(prev => prev.map(m => 
+          m.id === aiMsgId 
+            ? { ...m, content: "⚠️ **Error:** The AI provider returned an empty response. The selected model may be deprecated, unavailable, or your API key lacks access. Please select a different model." } 
+            : m
+        ));
+        return;
       }
     } catch (err: any) {
-      setError(err);
+      setMessages(prev => {
+        const hasMsg = prev.some(m => m.id === aiMsgId);
+        const errorMessage = `⚠️ **Error:** ${err.message === "Unauthorized" || err.message.includes("401") ? "API Key is invalid or expired. Please check settings." : err.message}`;
+        if (hasMsg) {
+          return prev.map(m => m.id === aiMsgId ? { ...m, content: errorMessage } : m);
+        }
+        return [...prev, { id: aiMsgId, role: "assistant", content: errorMessage }];
+      });
       console.error("Chat error:", err);
     } finally {
       setIsLoading(false);
@@ -617,13 +627,6 @@ export function AdvisorChatbot() {
                           <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--foreground)', opacity: 0.5 }} />
                           <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--foreground)', opacity: 0.5 }} />
                         </div>
-                      </div>
-                    )}
-                    {error && (
-                      <div style={{ fontSize: '0.75rem', color: '#ef4444', textAlign: 'center', padding: '0.75rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '0.75rem' }}>
-                        {error.message === "Unauthorized" || error.message.includes("401") 
-                          ? "API Key is invalid or expired. Please check settings." 
-                          : error.message}
                       </div>
                     )}
                     <div ref={messagesEndRef} style={{ height: 1 }} />
