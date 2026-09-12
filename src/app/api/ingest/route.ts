@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import { pipeline } from "@xenova/transformers";
+import { embed } from "ai";
+import { google } from "@ai-sdk/google";
 import { db } from "../../../db";
 import { documents } from "../../../db/schema";
 import { sql } from "drizzle-orm";
@@ -37,14 +38,9 @@ export async function POST(req: Request) {
       CREATE TABLE documents (
         id VARCHAR(191) PRIMARY KEY,
         content TEXT NOT NULL,
-        embedding vector(384)
+        embedding vector(3072)
       );
     `);
-
-    // Initialize extractor once for all files
-    const extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
-      quantized: true,
-    });
 
     const dataDir = path.join(process.cwd(), "data");
     const filesToIngest = [
@@ -67,8 +63,10 @@ export async function POST(req: Request) {
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
         try {
-          const output = await extractor(chunk, { pooling: "mean", normalize: true });
-          const embedding = Array.from(output.data);
+          const { embedding } = await embed({
+            model: google.textEmbeddingModel('gemini-embedding-001'),
+            value: chunk,
+          });
           
           await db.insert(documents).values({
             id: `${filename}-chunk-${i}`,
@@ -91,8 +89,10 @@ export async function POST(req: Request) {
       for (let i = 0; i < coursesChunks.length; i++) {
         const chunk = coursesChunks[i];
         try {
-          const output = await extractor(chunk, { pooling: "mean", normalize: true });
-          const embedding = Array.from(output.data);
+          const { embedding } = await embed({
+            model: google.textEmbeddingModel('gemini-embedding-001'),
+            value: chunk,
+          });
           
           await db.insert(documents).values({
             id: `courses-json-chunk-${i}`,
