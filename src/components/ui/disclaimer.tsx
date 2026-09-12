@@ -46,8 +46,8 @@ export function Disclaimer() {
           fontFamily: "var(--font-jakarta), system-ui, sans-serif",
           display: "flex",
           alignItems: "center",
-          gap: "0.45rem",
-          padding: "0.45rem 1rem",
+          gap: "0.5rem",
+          padding: "0.25rem 1rem 0.25rem 0.25rem",
           background: "color-mix(in srgb, var(--foreground) 6%, transparent)",
           border: "1px solid color-mix(in srgb, var(--foreground) 12%, transparent)",
           borderRadius: "9999px",
@@ -69,7 +69,18 @@ export function Disclaimer() {
           e.currentTarget.style.borderColor = "color-mix(in srgb, var(--foreground) 12%, transparent)";
         }}
       >
-        <WarningCircle size={15} weight="regular" />
+        <span style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "26px",
+          height: "26px",
+          borderRadius: "9999px",
+          background: "color-mix(in srgb, var(--foreground) 9%, transparent)",
+          flexShrink: 0,
+        }}>
+          <WarningCircle size={14} weight="regular" />
+        </span>
         <span>Disclaimer & Data Sources</span>
       </button>
 
