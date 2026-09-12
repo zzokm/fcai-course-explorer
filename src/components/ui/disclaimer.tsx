@@ -51,7 +51,7 @@ export function Disclaimer() {
           background: "color-mix(in srgb, var(--foreground) 6%, transparent)",
           border: "1px solid color-mix(in srgb, var(--foreground) 12%, transparent)",
           borderRadius: "9999px",
-          color: "color-mix(in srgb, var(--foreground) 65%, transparent)",
+          color: "var(--foreground)", opacity: 0.75,
           fontSize: "0.8125rem",
           fontWeight: 500,
           cursor: "pointer",
@@ -130,7 +130,7 @@ export function Disclaimer() {
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
-                  color: "color-mix(in srgb, var(--foreground) 45%, transparent)",
+                  color: "var(--foreground)", opacity: 0.55,
                   padding: "0.3rem",
                   display: "flex",
                   alignItems: "center",
@@ -160,7 +160,7 @@ export function Disclaimer() {
                   height: "36px",
                   borderRadius: "9px",
                   background: "color-mix(in srgb, var(--foreground) 7%, transparent)",
-                  color: "color-mix(in srgb, var(--foreground) 70%, transparent)",
+                  color: "var(--foreground)", opacity: 0.8,
                   flexShrink: 0,
                 }}>
                   <Info size={20} weight="regular" />
@@ -169,14 +169,14 @@ export function Disclaimer() {
                   <h3 style={{ fontSize: "1rem", fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>
                     Disclaimer & Data Sources
                   </h3>
-                  <p style={{ fontSize: "0.75rem", margin: 0, marginTop: "0.1rem", color: "color-mix(in srgb, var(--foreground) 50%, transparent)" }}>
+                  <p style={{ fontSize: "0.75rem", margin: 0, marginTop: "0.1rem", color: "var(--foreground)", opacity: 0.6 }}>
                     Please read before using this site
                   </p>
                 </div>
               </div>
 
               {/* Body */}
-              <div style={{ fontSize: "0.95rem", lineHeight: 1.65, color: "color-mix(in srgb, var(--foreground) 80%, transparent)" }}>
+              <div style={{ fontSize: "0.95rem", lineHeight: 1.65, color: "var(--foreground)", opacity: 0.9 }}>
                 <p style={{ margin: "0 0 0.85rem" }}>
                   The minimum GPA values shown are based on last year's admissions and will be updated once this year's minimums are officially confirmed.
                 </p>
@@ -200,7 +200,7 @@ export function Disclaimer() {
               <div style={{ height: "1px", background: "color-mix(in srgb, var(--foreground) 8%, transparent)", margin: "1.25rem 0" }} />
 
               {/* Downloads */}
-              <p style={{ fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: "color-mix(in srgb, var(--foreground) 45%, transparent)", margin: "0 0 0.75rem", fontFamily: "var(--font-jakarta), system-ui, sans-serif" }}>
+              <p style={{ fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--foreground)", opacity: 0.55, margin: "0 0 0.75rem", fontFamily: "var(--font-jakarta), system-ui, sans-serif" }}>
                 Download Source Files
               </p>
 
@@ -236,9 +236,9 @@ export function Disclaimer() {
                     <Icon size={20} weight="duotone" style={{ color, flexShrink: 0 }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: "0.875rem", fontWeight: 600, letterSpacing: "-0.005em" }}>{label}</div>
-                      <div style={{ fontSize: "0.75rem", color: "color-mix(in srgb, var(--foreground) 50%, transparent)", marginTop: "0.05rem" }}>{description}</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--foreground)", opacity: 0.6, marginTop: "0.05rem" }}>{description}</div>
                     </div>
-                    <DownloadSimple size={16} style={{ color: "color-mix(in srgb, var(--foreground) 35%, transparent)", flexShrink: 0 }} />
+                    <DownloadSimple size={16} style={{ color: "var(--foreground)", opacity: 0.4, flexShrink: 0 }} />
                   </a>
                 ))}
               </div>
