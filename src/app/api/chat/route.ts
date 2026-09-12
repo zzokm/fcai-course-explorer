@@ -12,7 +12,7 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
 // Define the available providers and how to instantiate them with custom keys
-function getProviderClient(provider: string, apiKey: string) {
+export function getProviderClient(provider: string, apiKey: string) {
   switch (provider) {
     case "openai":
       return createOpenAI({ apiKey });

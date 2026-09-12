@@ -179,6 +179,8 @@ export function AdvisorChatbot() {
     if (e) e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    const isNewConversation = sessions.find(s => s.id === currentSessionId)?.title === "New Conversation";
+
     const newUserMsg: Message = { id: Date.now().toString(), role: "user", content: input };
     const newMessages = [...messages, newUserMsg];
     setMessages(newMessages);
@@ -229,6 +231,27 @@ export function AdvisorChatbot() {
         }
       }
 
+      if (isNewConversation && fullText.trim() !== "") {
+        fetch("/api/title", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-provider": provider,
+            "x-api-key": apiKey,
+            "x-model": model,
+          },
+          body: JSON.stringify({ message: input })
+        }).then(res => res.json()).then(data => {
+          if (data.title) {
+            setSessions(prev => {
+              const next = prev.map(s => s.id === currentSessionId ? { ...s, title: data.title } : s);
+              localStorage.setItem("advisor_sessions", JSON.stringify(next));
+              return next;
+            });
+          }
+        }).catch(err => console.error("Title error:", err));
+      }
+
       if (fullText.trim() === "") {
         setMessages(prev => prev.map(m => 
           m.id === aiMsgId 
@@ -261,14 +284,7 @@ export function AdvisorChatbot() {
     setSessions(prev => {
       const next = prev.map(s => {
         if (s.id === currentSessionId) {
-          let title = s.title;
-          if (title === "New Conversation" && messages.length > 0) {
-            const firstUserMsg = messages.find(m => m.role === "user");
-            if (firstUserMsg) {
-              title = firstUserMsg.content.slice(0, 30) + (firstUserMsg.content.length > 30 ? "..." : "");
-            }
-          }
-          return { ...s, messages, title, updatedAt: Date.now() };
+          return { ...s, messages, updatedAt: Date.now() };
         }
         return s;
       });
