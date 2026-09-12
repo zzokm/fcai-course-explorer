@@ -394,10 +394,7 @@ export function AdvisorChatbot() {
 
   if (!isClient) return null;
 
-  const glassStyle = {
-    background: 'var(--card-bg-inner)',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
+  const glassShadowStyle = {
     border: '1px solid var(--card-border-outer)',
     boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.3)',
   };
@@ -441,13 +438,23 @@ export function AdvisorChatbot() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
             style={{
-              ...glassStyle,
-              ...(isFullscreen ? {
-                background: 'var(--background)',
-                backdropFilter: 'none',
-              } : {})
+              ...glassShadowStyle,
+              background: isFullscreen ? 'var(--background)' : 'transparent',
             }}
           >
+            {/* Background Blur Div for Windowed Mode */}
+            {!isFullscreen && (
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'var(--card-bg-inner)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                zIndex: -1,
+                pointerEvents: 'none'
+              }} />
+            )}
+
             {/* Header */}
             <div className="chat-header-blur" style={{
               position: 'absolute',
