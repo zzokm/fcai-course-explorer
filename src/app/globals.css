@@ -319,3 +319,38 @@ small { font-size: clamp(0.75rem, 1.5vw, 0.875rem); opacity: 0.5; }
 .markdown-body h1:first-child, .markdown-body h2:first-child, .markdown-body h3:first-child, .markdown-body h4:first-child {
   margin-top: 0;
 }
+.markdown-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+  font-size: 0.9em;
+  border: 1px solid var(--card-border-outer);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.markdown-body th {
+  background: rgba(128, 128, 128, 0.1);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--card-border-outer);
+}
+.markdown-body td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--card-border-outer);
+}
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+.markdown-body tr:nth-child(even) td {
+  background: rgba(128, 128, 128, 0.03);
+}
+.markdown-body blockquote {
+  border-left: 3px solid var(--foreground);
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  opacity: 0.8;
+  background: rgba(128, 128, 128, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
