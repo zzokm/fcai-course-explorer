@@ -69,6 +69,13 @@ export function AdvisorChatbot() {
   const phrases = ["Ask AI", "Have a question?", "Need course advice?", "Check prerequisites"];
   const [phraseIndex, setPhraseIndex] = useState(0);
 
+  // Scroll to bottom state
+  const [showScrollBottom, setShowScrollBottom] = useState(false);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    setShowScrollBottom(scrollHeight - scrollTop - clientHeight > 100);
+  };
+
   useEffect(() => {
     if (isOpen) return;
     const interval = setInterval(() => {
@@ -746,8 +753,8 @@ export function AdvisorChatbot() {
                 </div>
               ) : (
                 /* Chat Screen */
-                <>
-                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative', overflow: 'hidden' }}>
+                  <div onScroll={handleScroll} className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column' }}>
                     {ChatHeader}
                     <div style={{ padding: '0.75rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {messages.length === 0 && (
@@ -830,7 +837,37 @@ export function AdvisorChatbot() {
                       <PaperPlaneRight size={18} weight="fill" />
                     </button>
                   </form>
-                </>
+
+                  <AnimatePresence>
+                    {showScrollBottom && (
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                        onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                        style={{
+                          position: 'absolute',
+                          bottom: '5.5rem',
+                          right: '1.25rem',
+                          background: 'var(--foreground)',
+                          color: 'var(--background)',
+                          width: '2.5rem',
+                          height: '2.5rem',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: 'none',
+                          cursor: 'pointer',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                          zIndex: 20
+                        }}
+                      >
+                        <CaretDown size={20} weight="bold" />
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </div>
               )}
             </div>
           </motion.div>
