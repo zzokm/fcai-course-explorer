@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { MIN_GRADES } from "@/lib/data";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card";
-import { ArrowRight, Cpu, Database, PresentationChart, ChartLineUp, AppWindow } from "@phosphor-icons/react";
+import { ArrowRight, Cpu, Database, PresentationChart, ChartLineUp, AppWindow, Brain } from "@phosphor-icons/react";
 
 export const majors = [
   {
@@ -27,7 +27,7 @@ export const majors = [
     title: "Artificial Intelligence",
     grade: MIN_GRADES.Artificial_Intelligence,
     desc: "Build the future with machine learning, neural networks, and cognitive computing.",
-    icon: <AppWindow size={32} weight="light" />,
+    icon: <Brain size={32} weight="light" />,
   },
   {
     id: "Decision_Support_and_Operations_Research",
