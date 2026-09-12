@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple } from "@phosphor-icons/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { CustomDropdown } from "./custom-dropdown";
 
 const PROVIDERS = [
@@ -668,7 +669,7 @@ export function AdvisorChatbot() {
                           lineHeight: 1.5,
                           ...(m.role === "user" ? userBubbleStyle : aiBubbleStyle)
                         }} className="markdown-body">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                             {m.content}
                           </ReactMarkdown>
                         </div>
