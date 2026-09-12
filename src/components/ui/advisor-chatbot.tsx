@@ -7,6 +7,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import { CustomDropdown } from "./custom-dropdown";
+import { getPrerequisiteChain } from "@/lib/data";
+import { PrerequisiteTag } from "./prerequisite-tag";
 
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
@@ -767,7 +769,19 @@ export function AdvisorChatbot() {
                           overflowX: 'auto',
                           ...(m.role === "user" ? userBubbleStyle : aiBubbleStyle)
                         }} className="markdown-body">
-                          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm, remarkBreaks]}
+                            components={{
+                              a: ({ node, href, children, ...props }) => {
+                                if (href?.startsWith('/course/')) {
+                                  const code = href.replace('/course/', '');
+                                  const chain = getPrerequisiteChain(code);
+                                  return <PrerequisiteTag code={code} chain={chain} variant="markdown" />;
+                                }
+                                return <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', fontWeight: 600 }} {...props}>{children}</a>;
+                              }
+                            }}
+                          >
                             {m.content}
                           </ReactMarkdown>
                         </div>

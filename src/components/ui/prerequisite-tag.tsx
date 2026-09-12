@@ -122,7 +122,7 @@ function PrereqTreeNode({ node, depth = 0 }: { node: PrereqNode; depth?: number 
   );
 }
 
-export function PrerequisiteTag({ code, chain }: { code: string; chain: PrereqNode }) {
+export function PrerequisiteTag({ code, chain, variant = "pill" }: { code: string; chain: PrereqNode; variant?: "pill" | "markdown" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const course = chain.course;
@@ -131,23 +131,48 @@ export function PrerequisiteTag({ code, chain }: { code: string; chain: PrereqNo
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        style={{
-          background: course ? 'var(--foreground)' : 'rgba(128,128,128,0.2)',
-          color: course ? 'var(--background)' : 'var(--foreground)',
-          padding: '0.2rem 0.6rem',
-          borderRadius: '9999px',
-          fontWeight: 500,
-          border: 'none',
-          cursor: 'pointer',
-          fontFamily: 'inherit',
-          fontSize: 'inherit',
-          transition: 'opacity 0.15s',
-        }}
-      >
-        {course ? course.name : code}
-      </button>
+      {variant === "pill" ? (
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            background: course ? 'var(--foreground)' : 'rgba(128,128,128,0.2)',
+            color: course ? 'var(--background)' : 'var(--foreground)',
+            padding: '0.2rem 0.6rem',
+            borderRadius: '9999px',
+            fontWeight: 500,
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+            fontSize: 'inherit',
+            transition: 'opacity 0.15s',
+          }}
+        >
+          {course ? course.name : code}
+        </button>
+      ) : (
+        <span
+          onClick={() => setIsOpen(true)}
+          style={{
+            background: 'var(--card-bg-outer)',
+            border: '1px solid var(--card-border-outer)',
+            padding: '0.1rem 0.45rem',
+            borderRadius: '0.4rem',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.85em',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            color: 'inherit',
+            fontWeight: 600,
+            margin: '0 0.2rem',
+            verticalAlign: 'text-bottom',
+          }}
+        >
+          <BookOpen size={14} weight="bold" />
+          {code}
+        </span>
+      )}
 
       {mounted && createPortal(
         <AnimatePresence>
