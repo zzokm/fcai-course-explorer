@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { generateEmbedding } from "ai";
+import { embed } from "ai";
 import { google } from "@ai-sdk/google";
 import { db } from "../src/db";
 import { documents } from "../src/db/schema";
@@ -44,7 +44,7 @@ async function ingest() {
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       try {
-        const { embedding } = await generateEmbedding({
+        const { embedding } = await embed({
           model: google.textEmbeddingModel('text-embedding-004'),
           value: chunk,
         });
@@ -72,7 +72,7 @@ async function ingest() {
     for (let i = 0; i < coursesChunks.length; i++) {
       const chunk = coursesChunks[i];
       try {
-        const { embedding } = await generateEmbedding({
+        const { embedding } = await embed({
           model: google.textEmbeddingModel('text-embedding-004'),
           value: chunk,
         });

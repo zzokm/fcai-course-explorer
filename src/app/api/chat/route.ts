@@ -1,4 +1,4 @@
-import { streamText, generateEmbedding } from "ai";
+import { streamText, embed } from "ai";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
@@ -56,25 +56,33 @@ export async function POST(req: Request) {
   }
 
   try {
-    // 1. Generate embedding for the user's query using the Server's Google Gemini API key
-    const { embedding } = await generateEmbedding({
-      model: google.textEmbeddingModel("text-embedding-004"),
-      value: lastMessage.content,
-    });
+    let contextText = "";
+    
+    try {
+      // 1. Generate embedding for the user's query using the Server's Google Gemini API key
+      const { embedding } = await embed({
+        model: google.textEmbeddingModel("text-embedding-004"),
+        value: lastMessage.content,
+      });
 
-    // 2. Perform similarity search in pgvector
-    const similarity = sql<number>`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)})`;
-    const similarDocs = await db
-      .select({
-        content: documents.content,
-        similarity,
-      })
-      .from(documents)
-      .orderBy((t) => desc(t.similarity))
-      .limit(5);
+      // 2. Perform similarity search in pgvector
+      const similarity = sql<number>`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)})`;
+      const similarDocs = await db
+        .select({
+          content: documents.content,
+          similarity,
+        })
+        .from(documents)
+        .orderBy((t) => desc(t.similarity))
+        .limit(5);
 
-    // 3. Construct the context for the LLM
-    const contextText = similarDocs.map((doc) => doc.content).join("\n\n---\n\n");
+      // 3. Construct the context for the LLM
+      if (similarDocs.length > 0) {
+        contextText = similarDocs.map((doc) => doc.content).join("\n\n---\n\n");
+      }
+    } catch (e: any) {
+      console.warn("RAG skipped due to DB/Embedding error (Local mode):", e.message);
+    }
     
     const systemPrompt = `You are an official Academic Advisor Chatbot for the Faculty of Computers and Artificial Intelligence (FCAI).
     Answer the user's questions based ONLY on the following official context from the bylaws and course data.
@@ -95,7 +103,7 @@ export async function POST(req: Request) {
       messages,
     });
 
-    return result.toDataStreamResponse();
+    return result.toTextStreamResponse();
   } catch (error: any) {
     console.error("Chat API Error:", error);
     return new Response(JSON.stringify({ error: error.message || "An error occurred." }), { status: 500 });

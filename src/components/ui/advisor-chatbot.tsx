@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useChat, Message } from "@ai-sdk/react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown } from "@phosphor-icons/react";
+import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple } from "@phosphor-icons/react";
 
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
@@ -12,6 +11,12 @@ const PROVIDERS = [
   { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "openrouter", name: "OpenRouter", defaultModel: "meta-llama/llama-3.1-8b-instruct:free" },
 ];
+
+export type Message = {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+};
 
 type ChatSession = {
   id: string;
@@ -41,6 +46,9 @@ export function AdvisorChatbot() {
   // Multi-chat State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [hoveredSessionId, setHoveredSessionId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -159,20 +167,68 @@ export function AdvisorChatbot() {
 
   const currentSession = sessions.find(s => s.id === currentSessionId);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
-    api: "/api/chat",
-    id: currentSessionId,
-    initialMessages: currentSession?.messages || [],
-    headers: {
-      "x-provider": provider,
-      "x-api-key": apiKey,
-      "x-model": model,
-    },
-    onFinish: (message) => {},
-    onError: (error) => {
-      console.error("Chat error:", error);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const newUserMsg: Message = { id: Date.now().toString(), role: "user", content: input };
+    const newMessages = [...messages, newUserMsg];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-provider": provider,
+          "x-api-key": apiKey,
+          "x-model": model,
+        },
+        body: JSON.stringify({ messages: newMessages })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || res.statusText || `HTTP ${res.status}`);
+      }
+
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No stream available");
+
+      const aiMsgId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, { id: aiMsgId, role: "assistant", content: "" }]);
+
+      let done = false;
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          setMessages(prev => {
+            const last = prev[prev.length - 1];
+            if (last.id === aiMsgId) {
+              return [...prev.slice(0, -1), { ...last, content: last.content + chunk }];
+            }
+            return prev;
+          });
+        }
+      }
+    } catch (err: any) {
+      setError(err);
+      console.error("Chat error:", err);
+    } finally {
+      setIsLoading(false);
     }
-  });
+  };
 
   // Sync messages when session changes
   useEffect(() => {
@@ -241,6 +297,17 @@ export function AdvisorChatbot() {
       }
       return next;
     });
+  };
+
+  const saveTitle = (id: string) => {
+    if (editingTitle.trim()) {
+      setSessions(prev => {
+        const next = prev.map(s => s.id === id ? { ...s, title: editingTitle.trim() } : s);
+        localStorage.setItem("advisor_sessions", JSON.stringify(next));
+        return next;
+      });
+    }
+    setEditingSessionId(null);
   };
 
   if (!isClient) return null;
@@ -543,7 +610,9 @@ export function AdvisorChatbot() {
                     {sessions.map(s => (
                       <div 
                         key={s.id}
-                        onClick={() => { setCurrentSessionId(s.id); setView("chat"); }}
+                        onClick={() => { if (editingSessionId !== s.id) { setCurrentSessionId(s.id); setView("chat"); } }}
+                        onMouseEnter={() => setHoveredSessionId(s.id)}
+                        onMouseLeave={() => setHoveredSessionId(null)}
                         style={{
                           padding: '0.75rem 1rem',
                           borderRadius: '0.75rem',
@@ -553,14 +622,39 @@ export function AdvisorChatbot() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          transition: 'background 0.2s'
+                          transition: 'background 0.2s',
+                          gap: '0.5rem'
                         }}
                       >
-                        <div style={{ overflow: 'hidden' }}>
-                          <div style={{ fontSize: '0.875rem', fontWeight: 600, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{s.title}</div>
-                          <div style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.25rem' }}>{new Date(s.updatedAt).toLocaleDateString()}</div>
+                        <div style={{ overflow: 'hidden', flex: 1 }}>
+                          {editingSessionId === s.id ? (
+                            <input 
+                              autoFocus
+                              value={editingTitle}
+                              onChange={e => setEditingTitle(e.target.value)}
+                              onBlur={() => saveTitle(s.id)}
+                              onKeyDown={e => e.key === 'Enter' && saveTitle(s.id)}
+                              onClick={e => e.stopPropagation()}
+                              style={{ ...inputStyle, width: '100%', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.875rem' }}
+                            />
+                          ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <div style={{ fontSize: '0.875rem', fontWeight: 600, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{s.title}</div>
+                              {hoveredSessionId === s.id && (
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); setEditingTitle(s.title); setEditingSessionId(s.id); }}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.5, display: 'flex', padding: '0.125rem' }}
+                                >
+                                  <PencilSimple size={14} />
+                                </button>
+                              )}
+                            </div>
+                          )}
+                          {editingSessionId !== s.id && (
+                            <div style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.25rem' }}>{new Date(s.updatedAt).toLocaleDateString()}</div>
+                          )}
                         </div>
-                        <button onClick={(e) => deleteSession(s.id, e)} style={{ background: 'none', border: 'none', color: '#ef4444', opacity: 0.7, cursor: 'pointer', padding: '0.5rem' }}>
+                        <button onClick={(e) => deleteSession(s.id, e)} style={{ background: 'none', border: 'none', color: '#ef4444', opacity: 0.7, cursor: 'pointer', padding: '0.5rem', display: 'flex' }}>
                           <X size={16} />
                         </button>
                       </div>
@@ -619,7 +713,7 @@ export function AdvisorChatbot() {
                     <input
                       type="text"
                       value={input}
-                      onChange={handleInputChange}
+                      onChange={(e) => setInput(e.target.value)}
                       placeholder="Ask about bylaws or courses..."
                       style={{ ...inputStyle, flex: 1, padding: '0.75rem 1rem', borderRadius: '9999px', fontSize: '0.875rem', outline: 'none' }}
                     />
