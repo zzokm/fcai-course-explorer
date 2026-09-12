@@ -189,3 +189,17 @@ small { font-size: 0.875rem; opacity: 0.5; }
   backdrop-filter: blur(8px);
   z-index: 50;
 }
+
+/* Chatbox Responsive Sizing */
+.chatbox-window {
+  width: calc(100vw - 3rem);
+  max-width: 400px;
+  height: 600px;
+}
+
+@media (min-width: 1024px) {
+  .chatbox-window {
+    max-width: 440px;
+    height: 680px;
+  }
+}

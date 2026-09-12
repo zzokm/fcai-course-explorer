@@ -19,12 +19,15 @@ export const metadata: Metadata = {
   description: "Course information and exploration platform",
 };
 
+import { AdvisorChatbot } from "@/components/ui/advisor-chatbot";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${jakarta.variable} ${jetbrainsMono.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
+          <AdvisorChatbot />
         </ThemeProvider>
       </body>
     </html>
