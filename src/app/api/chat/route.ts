@@ -1,5 +1,5 @@
-import { streamText, embed } from "ai";
-import { google } from "@ai-sdk/google";
+import { streamText } from "ai";
+import { pipeline } from "@xenova/transformers";
 import { openai } from "@ai-sdk/openai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
@@ -57,11 +57,12 @@ export async function POST(req: Request) {
     let contextText = "";
     
     try {
-      // 1. Generate embedding for the user's query using the Server's Google Gemini API key
-      const { embedding } = await embed({
-        model: google.textEmbeddingModel("text-embedding-004"),
-        value: lastMessage.content,
+      // 1. Generate embedding for the user's query using local transformers
+      const extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
+        quantized: true,
       });
+      const output = await extractor(lastMessage.content, { pooling: "mean", normalize: true });
+      const embedding = Array.from(output.data);
 
       // 2. Perform similarity search in pgvector
       const similarity = sql<number>`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)})`;

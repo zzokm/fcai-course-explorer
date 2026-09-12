@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { embed } from "ai";
-import { google } from "@ai-sdk/google";
+import { pipeline } from "@xenova/transformers";
 import { db } from "../../../db";
 import { documents } from "../../../db/schema";
 import { sql } from "drizzle-orm";
@@ -30,17 +29,22 @@ export async function POST(req: Request) {
     // Create the pgvector extension if it doesn't exist
     await db.execute(sql`CREATE EXTENSION IF NOT EXISTS vector;`);
     
+    // Drop table if exists to resize vector dimensions
+    await db.execute(sql`DROP TABLE IF EXISTS documents;`);
+
     // Create the documents table if it doesn't exist (Drizzle push alternative for runtime)
     await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS documents (
+      CREATE TABLE documents (
         id VARCHAR(191) PRIMARY KEY,
         content TEXT NOT NULL,
-        embedding vector(768)
+        embedding vector(384)
       );
     `);
 
-    // Clear existing data to avoid duplicates on re-ingest
-    await db.execute(sql`TRUNCATE TABLE documents;`);
+    // Initialize extractor once for all files
+    const extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
+      quantized: true,
+    });
 
     const dataDir = path.join(process.cwd(), "data");
     const filesToIngest = [
@@ -63,10 +67,8 @@ export async function POST(req: Request) {
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
         try {
-          const { embedding } = await embed({
-            model: google.textEmbeddingModel('text-embedding-004'),
-            value: chunk,
-          });
+          const output = await extractor(chunk, { pooling: "mean", normalize: true });
+          const embedding = Array.from(output.data);
           
           await db.insert(documents).values({
             id: `${filename}-chunk-${i}`,
@@ -89,10 +91,8 @@ export async function POST(req: Request) {
       for (let i = 0; i < coursesChunks.length; i++) {
         const chunk = coursesChunks[i];
         try {
-          const { embedding } = await embed({
-            model: google.textEmbeddingModel('text-embedding-004'),
-            value: chunk,
-          });
+          const output = await extractor(chunk, { pooling: "mean", normalize: true });
+          const embedding = Array.from(output.data);
           
           await db.insert(documents).values({
             id: `courses-json-chunk-${i}`,

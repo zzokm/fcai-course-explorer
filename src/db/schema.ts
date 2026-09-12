@@ -5,7 +5,7 @@ export const documents = pgTable(
   {
     id: varchar("id", { length: 191 }).primaryKey(),
     content: text("content").notNull(),
-    embedding: vector("embedding", { dimensions: 768 }), // Gemini text-embedding-004 has 768 dimensions
+    embedding: vector("embedding", { dimensions: 384 }), // all-MiniLM-L6-v2 has 384 dimensions
   },
   (table) => ({
     embeddingIndex: index("embeddingIndex").using(
