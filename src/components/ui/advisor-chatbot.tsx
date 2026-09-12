@@ -66,7 +66,7 @@ export function AdvisorChatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Animated Pill Text State
-  const phrases = ["Ask AI", "Have a question?", "Need course advice?", "Check prerequisites"];
+  const phrases = ["Have a question?", "Need course advice?", "Confused?", "Ask AI"];
   const [phraseIndex, setPhraseIndex] = useState(0);
 
   // Scroll to bottom state
@@ -78,11 +78,12 @@ export function AdvisorChatbot() {
 
   useEffect(() => {
     if (isOpen) return;
-    const interval = setInterval(() => {
+    const duration = phraseIndex === phrases.length - 1 ? 6000 : 3000;
+    const timeout = setTimeout(() => {
       setPhraseIndex(i => (i + 1) % phrases.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isOpen, phrases.length]);
+    }, duration);
+    return () => clearTimeout(timeout);
+  }, [isOpen, phraseIndex, phrases.length]);
 
   // Initialize
   useEffect(() => {
