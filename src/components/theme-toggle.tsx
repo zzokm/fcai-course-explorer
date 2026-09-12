@@ -14,13 +14,12 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
   if (!mounted) {
     return (
       <div 
+        className="theme-toggle-btn"
         style={{ 
           position: 'absolute',
           top: '1.5rem',
           right: '1.5rem',
           zIndex: 40,
-          width: '72px', 
-          height: '38px', 
           borderRadius: '9999px',
           background: 'rgba(128,128,128,0.1)',
           ...style 
@@ -33,6 +32,7 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
 
   return (
     <button
+      className="theme-toggle-btn"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Toggle theme"
       style={{
@@ -40,8 +40,6 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
         top: '1.5rem',
         right: '1.5rem',
         zIndex: 40,
-        width: '72px',
-        height: '38px',
         borderRadius: '9999px',
         background: 'rgba(128,128,128,0.1)',
         border: 'none',

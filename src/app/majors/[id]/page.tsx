@@ -123,7 +123,7 @@ export default async function MajorPage({ params }: { params: { id: string } }) 
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, opacity: 0.8 }}>
             <ArrowLeft size={20} />
-            Back to Majors
+            Home
           </Link>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

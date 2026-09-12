@@ -107,6 +107,28 @@ export function AdvisorChatbot() {
     }
   }, []);
 
+  // Scroll lock effect
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
+    if (isOpen && isFullscreen) {
+      document.body.classList.add('chat-fullscreen-lock');
+    } else {
+      document.body.classList.remove('chat-fullscreen-lock');
+    }
+    
+    if (isOpen) {
+      document.body.classList.add('chat-mobile-lock');
+    } else {
+      document.body.classList.remove('chat-mobile-lock');
+    }
+    
+    return () => {
+      document.body.classList.remove('chat-fullscreen-lock');
+      document.body.classList.remove('chat-mobile-lock');
+    };
+  }, [isOpen, isFullscreen]);
+
   // Auto-check Token logic
   useEffect(() => {
     if (!apiKey || apiKey.length < 5) {
