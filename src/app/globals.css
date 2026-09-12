@@ -347,14 +347,34 @@ body.chat-fullscreen-lock {
   margin-top: 0;
 }
 .markdown-body table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: separate;
   border-spacing: 0;
   margin: 1rem 0;
   font-size: 0.9em;
   border: 1px solid var(--card-border-outer);
   border-radius: 0.5rem;
-  overflow: hidden;
+}
+
+/* Thin horizontal scrollbar for tables and code blocks */
+.markdown-body table::-webkit-scrollbar,
+.markdown-body pre::-webkit-scrollbar {
+  height: 6px;
+}
+.markdown-body table::-webkit-scrollbar-track,
+.markdown-body pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+.markdown-body table::-webkit-scrollbar-thumb,
+.markdown-body pre::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.2);
+  border-radius: 10px;
+}
+.markdown-body table::-webkit-scrollbar-thumb:hover,
+.markdown-body pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.4);
 }
 .markdown-body th {
   background: rgba(128, 128, 128, 0.1);

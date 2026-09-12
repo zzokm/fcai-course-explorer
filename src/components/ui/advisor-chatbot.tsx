@@ -689,7 +689,7 @@ export function AdvisorChatbot() {
               ) : (
                 /* Chat Screen */
                 <>
-                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <div style={{ height: '3.5rem', flexShrink: 0 }} />
                     {messages.length === 0 && (
                       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: 0.5, padding: '1rem' }}>
@@ -704,6 +704,7 @@ export function AdvisorChatbot() {
                           padding: '0.75rem 1rem',
                           fontSize: '0.875rem',
                           lineHeight: 1.5,
+                          overflowX: 'auto',
                           ...(m.role === "user" ? userBubbleStyle : aiBubbleStyle)
                         }} className="markdown-body">
                           <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
