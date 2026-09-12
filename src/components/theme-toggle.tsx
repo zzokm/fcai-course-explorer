@@ -5,40 +5,67 @@ import { Moon, Sun } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 
 export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div 
+        style={{ 
+          width: '72px', 
+          height: '38px', 
+          borderRadius: '9999px',
+          background: 'rgba(128,128,128,0.1)',
+          ...style 
+        }} 
+      />
+    );
+  }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label="Toggle theme"
       style={{
-        position: 'absolute',
-        top: '1.5rem',
-        right: '1.5rem',
-        background: 'var(--card-bg-outer)',
-        border: '1px solid var(--card-border-outer)',
-        borderRadius: '50%',
-        width: '3rem',
-        height: '3rem',
+        position: 'relative',
+        width: '72px',
+        height: '38px',
+        borderRadius: '9999px',
+        background: 'rgba(128,128,128,0.1)',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '4px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        color: 'var(--foreground)',
-        zIndex: 40,
-        boxShadow: '0 4px 12px -2px rgba(0,0,0,0.1)',
-        backdropFilter: 'blur(8px)',
+        transition: 'background 0.3s ease',
         ...style
       }}
-      aria-label="Toggle theme"
     >
-      <Sun size={24} weight="light" className="sun-icon" />
-      <Moon size={24} weight="light" className="moon-icon" />
-      <style dangerouslySetInnerHTML={{__html: `
-        .sun-icon { display: none; }
-        .moon-icon { display: block; }
-        .dark .sun-icon { display: block; }
-        .dark .moon-icon { display: none; }
-      `}} />
+      <div
+        style={{
+          width: '30px',
+          height: '30px',
+          borderRadius: '50%',
+          background: 'var(--background)',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--foreground)',
+          transform: `translateX(${isDark ? '34px' : '0'})`,
+          transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s ease',
+        }}
+      >
+        {isDark ? (
+          <Moon size={16} weight="fill" />
+        ) : (
+          <Sun size={16} weight="fill" />
+        )}
+      </div>
     </button>
   );
 }
