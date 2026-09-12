@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple } from "@phosphor-icons/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { CustomDropdown } from "./custom-dropdown";
 
 const PROVIDERS = [
@@ -265,7 +267,7 @@ export function AdvisorChatbot() {
       if (fullText.trim() === "") {
         setMessages(prev => prev.map(m => 
           m.id === aiMsgId 
-            ? { ...m, content: "⚠️ **Error:** The AI provider returned an empty response. The selected model may be deprecated, unavailable, or your API key lacks access. Please select a different model." } 
+            ? { ...m, content: "⚠️ **Error:** The AI provider returned an empty response. (No further error details provided by the API)" } 
             : m
         ));
         return;
@@ -273,7 +275,7 @@ export function AdvisorChatbot() {
     } catch (err: any) {
       setMessages(prev => {
         const hasMsg = prev.some(m => m.id === aiMsgId);
-        const errorMessage = `⚠️ **Error:** ${err.message === "Unauthorized" || err.message.includes("401") ? "API Key is invalid or expired. Please check settings." : err.message}`;
+        const errorMessage = `⚠️ **Error:** ${err.message}`;
         if (hasMsg) {
           return prev.map(m => m.id === aiMsgId ? { ...m, content: errorMessage } : m);
         }
@@ -665,8 +667,10 @@ export function AdvisorChatbot() {
                           fontSize: '0.875rem',
                           lineHeight: 1.5,
                           ...(m.role === "user" ? userBubbleStyle : aiBubbleStyle)
-                        }}>
-                          {m.content}
+                        }} className="markdown-body">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {m.content}
+                          </ReactMarkdown>
                         </div>
                       </div>
                     ))}
