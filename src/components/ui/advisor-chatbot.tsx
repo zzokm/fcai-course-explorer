@@ -418,17 +418,27 @@ export function AdvisorChatbot() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
             style={{
-              ...glassStyle
+              ...glassStyle,
+              ...(isFullscreen ? {
+                background: 'var(--background)',
+                backdropFilter: 'none',
+              } : {})
             }}
           >
             {/* Header */}
             <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 10,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '1rem 1.25rem',
               borderBottom: '1px solid var(--card-border-outer)',
-              background: 'rgba(0,0,0,0.02)',
+              background: 'var(--card-bg-inner)',
+              backdropFilter: 'blur(24px)',
               borderTopLeftRadius: '1.5rem',
               borderTopRightRadius: '1.5rem'
             }}>
@@ -483,7 +493,7 @@ export function AdvisorChatbot() {
               
               {!hasAcceptedDisclaimer ? (
                 /* Disclaimer Screen */
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '2rem', textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', paddingTop: '4rem', paddingBottom: '2rem', paddingLeft: '2rem', paddingRight: '2rem', textAlign: 'center' }}>
                   <div style={{ width: '4rem', height: '4rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
                     <WarningCircle size={32} weight="fill" />
                   </div>
@@ -499,7 +509,7 @@ export function AdvisorChatbot() {
                 </div>
               ) : view === "settings" ? (
                 /* Settings Screen */
-                <div style={{ flex: 1, padding: '1.5rem' }}>
+                <div className="custom-scrollbar" style={{ flex: 1, padding: '5rem 1.5rem 1.5rem', overflowY: 'auto' }}>
                   <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', opacity: 0.7 }}>Bring your own key (BYOK) to use the advisor. Keys are stored securely in your browser's local storage.</p>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -589,7 +599,7 @@ export function AdvisorChatbot() {
                 </div>
               ) : view === "history" ? (
                 /* History Screen */
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingTop: '3.5rem' }}>
                   <div style={{ padding: '1rem', borderBottom: '1px solid var(--card-border-outer)' }}>
                     <button onClick={() => createNewSession()} style={{ ...btnPrimaryStyle, width: '100%', padding: '0.75rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                       <Plus size={18} weight="bold" /> New Chat
@@ -659,6 +669,7 @@ export function AdvisorChatbot() {
                 /* Chat Screen */
                 <>
                   <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ height: '3.5rem', flexShrink: 0 }} />
                     {messages.length === 0 && (
                       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: 0.5, padding: '1rem' }}>
                         <ChatTeardropText size={48} style={{ marginBottom: '1rem' }} />

@@ -48,7 +48,7 @@ export const majors = [
 export function MajorBento() {
   return (
     <div className="container" style={{ maxWidth: '1400px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1 style={{ marginBottom: '0.5rem' }}>FCAI Courses Explorer</h1>
         <p style={{ maxWidth: '600px', margin: '0 auto' }}>Select a specialization to explore its full curriculum and requirements.</p>
       </div>
