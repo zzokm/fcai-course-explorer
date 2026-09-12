@@ -165,9 +165,12 @@ export function Disclaimer() {
               </div>
 
               {/* Body */}
-              <div style={{ fontSize: "0.875rem", lineHeight: 1.65, color: "color-mix(in srgb, var(--foreground) 80%, transparent)" }}>
+              <div style={{ fontSize: "0.95rem", lineHeight: 1.65, color: "color-mix(in srgb, var(--foreground) 80%, transparent)" }}>
                 <p style={{ margin: "0 0 0.85rem" }}>
-                  All course information on this site — including prerequisites, credit hours, and section requirements — is extracted directly from the official college bylaws.
+                  The minimum GPA values shown are based on last year's admissions and will be updated once this year's minimums are officially confirmed.
+                </p>
+                <p style={{ margin: "0 0 0.85rem" }}>
+                  All course information on this site, including prerequisites, credit hours, and section requirements, is extracted directly from the official college bylaws.
                 </p>
                 <div style={{
                   padding: "0.85rem 1rem",

@@ -9,18 +9,18 @@ import { ArrowRight, Cpu, Database, PresentationChart, ChartLineUp, AppWindow } 
 
 export const majors = [
   {
-    id: "Computer_Science",
-    title: "Computer Science",
-    grade: MIN_GRADES.Computer_Science,
-    desc: "Dive deep into algorithms, architecture, and the core of computation.",
-    icon: <Cpu size={32} weight="light" />,
-  },
-  {
     id: "Information_Systems",
     title: "Information Systems",
     grade: MIN_GRADES.Information_Systems,
     desc: "Bridge the gap between business processes and complex data systems.",
     icon: <Database size={32} weight="light" />,
+  },
+  {
+    id: "Computer_Science",
+    title: "Computer Science",
+    grade: MIN_GRADES.Computer_Science,
+    desc: "Dive deep into algorithms, architecture, and the core of computation.",
+    icon: <Cpu size={32} weight="light" />,
   },
   {
     id: "Artificial_Intelligence",
