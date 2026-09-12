@@ -460,6 +460,7 @@ export function AdvisorChatbot() {
     color: 'var(--background)',
     borderRadius: '1.25rem',
     borderBottomRightRadius: '0.25rem',
+    fontFamily: 'var(--font-jakarta), var(--font-rubik), sans-serif',
   };
 
   const aiBubbleStyle = {
@@ -468,6 +469,7 @@ export function AdvisorChatbot() {
     color: 'var(--foreground)',
     borderRadius: '1.25rem',
     borderBottomLeftRadius: '0.25rem',
+    fontFamily: 'var(--font-jakarta), var(--font-rubik), sans-serif',
   };
 
   const stickyHeaderStyle: React.CSSProperties = {
@@ -897,34 +899,30 @@ export function AdvisorChatbot() {
           overflow: 'hidden'
         }}
       >
+        {!isOpen && (
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={phraseIndex}
+              layout
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'backOut' }}
+              style={{
+                whiteSpace: 'nowrap',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {phrases[phraseIndex]}
+            </motion.div>
+          </AnimatePresence>
+        )}
+
         <motion.div layout style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {isOpen ? <X size={24} weight="bold" /> : <ChatTeardropText size={24} weight="fill" />}
         </motion.div>
-        
-        {!isOpen && (
-          <div style={{ position: 'relative', height: '1.2rem', minWidth: '135px', overflow: 'hidden' }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={phraseIndex}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'backOut' }}
-                style={{
-                  position: 'absolute',
-                  whiteSpace: 'nowrap',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  letterSpacing: '-0.01em',
-                  left: 0,
-                  top: 0
-                }}
-              >
-                {phrases[phraseIndex]}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        )}
       </motion.button>
     </div>
   );
