@@ -1,0 +1,138 @@
+﻿
+> fcai-courses@0.1.0 lint
+> eslint
+
+
+D:\Yehia Uni\Courses\src\app\api\chat\route.ts
+    3:10  warning  'openai' is defined but never used        @typescript-eslint/no-unused-vars
+    4:10  warning  'anthropic' is defined but never used     @typescript-eslint/no-unused-vars
+   21:35  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+   24:44  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+   83:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Yehia Uni\Courses\src\app\api\ingest\route.ts
+  110:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Yehia Uni\Courses\src\app\api\models\route.ts
+  21:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  22:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Yehia Uni\Courses\src\app\majors\[id]\page.tsx
+   9:33  warning  'CaretDown' is defined but never used            @typescript-eslint/no-unused-vars
+  11:7   warning  'majorNames' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  30:37  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  38:95  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  43:35  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  64:41  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+D:\Yehia Uni\Courses\src\components\theme-toggle.tsx
+   9:11  warning  'theme' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  12:25  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Yehia Uni\Courses\src\components\theme-toggle.tsx:12:25
+  10 |   const [mounted, setMounted] = React.useState(false);
+  11 |
+> 12 |   React.useEffect(() => setMounted(true), []);
+     |                         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  13 |
+  14 |   if (!mounted) {
+  15 |     return (  react-hooks/set-state-in-effect
+
+D:\Yehia Uni\Courses\src\components\ui\advisor-chatbot.tsx
+    5:105  warning  'CaretDown' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+   39:10   warning  'isProviderDropdownOpen' is assigned a value but never used                                                        @typescript-eslint/no-unused-vars
+   39:34   warning  'setIsProviderDropdownOpen' is assigned a value but never used                                                     @typescript-eslint/no-unused-vars
+   40:10   warning  'isModelDropdownOpen' is assigned a value but never used                                                           @typescript-eslint/no-unused-vars
+   40:31   warning  'setIsModelDropdownOpen' is assigned a value but never used                                                        @typescript-eslint/no-unused-vars
+   75:16   warning  'e' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+  121:39   error    Unexpected any. Specify a different type                                                                           @typescript-eslint/no-explicit-any
+  130:16   warning  'err' is defined but never used                                                                                    @typescript-eslint/no-unused-vars
+  139:6    warning  React Hook useEffect has a missing dependency: 'model'. Either include it or remove the dependency array           react-hooks/exhaustive-deps
+  174:10   warning  'error' is assigned a value but never used                                                                         @typescript-eslint/no-unused-vars
+  238:19   error    Unexpected any. Specify a different type                                                                           @typescript-eslint/no-explicit-any
+  258:6    warning  React Hook useEffect has a missing dependency: 'currentSession'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  459:179  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                    react/no-unescaped-entities
+
+D:\Yehia Uni\Courses\src\components\ui\disclaimer.tsx
+   36:5    error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Yehia Uni\Courses\src\components\ui\disclaimer.tsx:36:5
+  34 |
+  35 |   useEffect(() => {
+> 36 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |   }, []);
+  38 |
+  39 |   if (!mounted) return null;  react-hooks/set-state-in-effect
+  181:70   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react/no-unescaped-entities
+  181:118  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react/no-unescaped-entities
+
+D:\Yehia Uni\Courses\src\components\ui\elective-info.tsx
+   18:21   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Yehia Uni\Courses\src\components\ui\elective-info.tsx:18:21
+  16 |   const btnRef = useRef<HTMLButtonElement>(null);
+  17 |
+> 18 |   useEffect(() => { setMounted(true); }, []);
+     |                     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |
+  20 |   const open = () => {
+  21 |     if (btnRef.current) {  react-hooks/set-state-in-effect
+  102:107  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react/no-unescaped-entities
+  117:70   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react/no-unescaped-entities
+  132:77   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react/no-unescaped-entities
+
+D:\Yehia Uni\Courses\src\components\ui\major-bento.tsx
+  8:64  warning  'AppWindow' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Yehia Uni\Courses\src\components\ui\prerequisite-tag.tsx
+  130:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Yehia Uni\Courses\src\components\ui\prerequisite-tag.tsx:130:21
+  128 |   const course = chain.course;
+  129 |
+> 130 |   useEffect(() => { setMounted(true); }, []);
+      |                     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  131 |
+  132 |   return (
+  133 |     <>  react-hooks/set-state-in-effect
+
+D:\Yehia Uni\Courses\src\lib\data.ts
+  18:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  25:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 49 problems (33 errors, 16 warnings)
+

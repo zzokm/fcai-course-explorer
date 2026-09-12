@@ -184,6 +184,8 @@ export function AdvisorChatbot() {
     setIsLoading(true);
     setError(null);
 
+    const aiMsgId = (Date.now() + 1).toString();
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -205,7 +207,6 @@ export function AdvisorChatbot() {
       const decoder = new TextDecoder();
       if (!reader) throw new Error("No stream available");
 
-      const aiMsgId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, { id: aiMsgId, role: "assistant", content: "" }]);
 
       let done = false;

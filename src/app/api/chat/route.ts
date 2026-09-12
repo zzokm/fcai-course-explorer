@@ -1,8 +1,9 @@
 import { streamText, embed } from "ai";
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { db } from "../../../db";
 import { documents } from "../../../db/schema";
 import { desc, sql } from "drizzle-orm";
@@ -17,11 +18,8 @@ function getProviderClient(provider: string, apiKey: string) {
       return createOpenAI({ apiKey });
     case "anthropic":
       // The AI SDK's createAnthropic isn't strictly required if you use standard but custom instances are usually created via createAnthropic or similar. 
-      // Actually, `@ai-sdk/anthropic` exports `createAnthropic`.
-      const { createAnthropic } = require("@ai-sdk/anthropic");
       return createAnthropic({ apiKey });
     case "google":
-      const { createGoogleGenerativeAI } = require("@ai-sdk/google");
       return createGoogleGenerativeAI({ apiKey });
     case "deepseek":
     case "openrouter":
@@ -80,8 +78,8 @@ export async function POST(req: Request) {
       if (similarDocs.length > 0) {
         contextText = similarDocs.map((doc) => doc.content).join("\n\n---\n\n");
       }
-    } catch (e: any) {
-      console.warn("RAG skipped due to DB/Embedding error (Local mode):", e.message);
+    } catch (e: unknown) {
+      console.warn("RAG skipped due to DB/Embedding error (Local mode):", e instanceof Error ? e.message : e);
     }
     
     const systemPrompt = `You are an official Academic Advisor Chatbot for the Faculty of Computers and Artificial Intelligence (FCAI).
@@ -107,8 +105,8 @@ export async function POST(req: Request) {
     });
 
     return result.toTextStreamResponse();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Chat API Error:", error);
-    return new Response(JSON.stringify({ error: error.message || "An error occurred." }), { status: 500 });
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "An error occurred." }), { status: 500 });
   }
 }
