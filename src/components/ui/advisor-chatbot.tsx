@@ -249,8 +249,16 @@ export function AdvisorChatbot() {
       });
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || res.statusText || `HTTP ${res.status}`);
+        let errData;
+        try { errData = await res.json(); } catch(e) { errData = {}; }
+        let errMsg = errData.error || res.statusText || `HTTP ${res.status}`;
+        
+        if (res.status === 429 || errMsg.toLowerCase().includes("rate limit") || errMsg.toLowerCase().includes("too many requests") || errMsg.toLowerCase().includes("quota")) {
+          errMsg = `🚨 **Rate Limit or Quota Exceeded (429)**\n\nYou have hit the rate limit or quota for this AI provider.\n\n**Recommendations:**\n- **Wait a moment:** You might be sending requests too quickly.\n- **Check your balance:** Ensure you have sufficient credits or a valid subscription on the provider's dashboard.\n- **Switch providers:** Open the Settings (⚙️) and switch to a different AI provider or model.\n\n**Provider Details:**\n\`\`\`text\n${errMsg}\n\`\`\``;
+        } else {
+          errMsg = `⚠️ **API Error (${res.status}):**\n\`\`\`text\n${errMsg}\n\`\`\``;
+        }
+        throw new Error(errMsg);
       }
 
       const reader = res.body?.getReader();
@@ -302,7 +310,7 @@ export function AdvisorChatbot() {
       if (fullText.trim() === "") {
         setMessages(prev => prev.map(m => 
           m.id === aiMsgId 
-            ? { ...m, content: "⚠️ **Error:** The AI provider returned an empty response. (No further error details provided by the API)" } 
+            ? { ...m, content: `⚠️ **Error: Empty Response**\n\nThe AI provider accepted the request but returned an empty stream. This usually happens if:\n- The selected model (\`${model}\`) is unsupported or does not exist.\n- The provider had an internal issue and dropped the connection.\n- Your API key does not have access to this specific model.\n\nTry switching to a different model in the Settings.` } 
             : m
         ));
         return;
@@ -310,7 +318,10 @@ export function AdvisorChatbot() {
     } catch (err: any) {
       setMessages(prev => {
         const hasMsg = prev.some(m => m.id === aiMsgId);
-        const errorMessage = `⚠️ **Error:** ${err.message}`;
+        const errorMessage = err.message.includes("🚨") || err.message.includes("⚠️") 
+          ? err.message 
+          : `⚠️ **Error:** ${err.message}`;
+          
         if (hasMsg) {
           return prev.map(m => m.id === aiMsgId ? { ...m, content: errorMessage } : m);
         }

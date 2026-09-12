@@ -127,8 +127,23 @@ export async function POST(req: Request) {
     });
 
     return result.toTextStreamResponse();
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Chat API Error:", error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "An error occurred." }), { status: 500 });
+    
+    let errorDetail = error instanceof Error ? error.message : String(error);
+    
+    // AI SDK APICallError has responseBody
+    if (error.responseBody) {
+      errorDetail += `\n\nProvider Response Body:\n${typeof error.responseBody === 'string' ? error.responseBody : JSON.stringify(error.responseBody, null, 2)}`;
+    }
+    
+    // Try to extract any cause or other hidden properties
+    if (error.cause) {
+      errorDetail += `\n\nCause: ${error.cause instanceof Error ? error.cause.message : String(error.cause)}`;
+    }
+    
+    const statusCode = error.statusCode || (errorDetail.includes('429') ? 429 : 500);
+
+    return new Response(JSON.stringify({ error: errorDetail }), { status: statusCode });
   }
 }
