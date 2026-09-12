@@ -224,8 +224,15 @@ body.chat-fullscreen-lock {
   height: 600px;
   max-height: calc(100dvh - 6rem);
   border-radius: 1.5rem;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.chat-header-blur {
+  background: var(--card-bg-inner) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
 }
 
 @media (max-width: 767px) {

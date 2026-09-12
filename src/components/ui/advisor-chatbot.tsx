@@ -397,6 +397,7 @@ export function AdvisorChatbot() {
   const glassStyle = {
     background: 'var(--card-bg-inner)',
     backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
     border: '1px solid var(--card-border-outer)',
     boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.3)',
   };
@@ -448,7 +449,7 @@ export function AdvisorChatbot() {
             }}
           >
             {/* Header */}
-            <div style={{
+            <div className="chat-header-blur" style={{
               position: 'absolute',
               top: 0,
               left: 0,
@@ -459,8 +460,6 @@ export function AdvisorChatbot() {
               justifyContent: 'space-between',
               padding: '1rem 1.25rem',
               borderBottom: '1px solid var(--card-border-outer)',
-              background: 'var(--card-bg-inner)',
-              backdropFilter: 'blur(24px)',
               borderTopLeftRadius: '1.5rem',
               borderTopRightRadius: '1.5rem'
             }}>
