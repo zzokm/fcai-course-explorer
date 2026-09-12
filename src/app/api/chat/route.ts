@@ -72,7 +72,6 @@ export async function POST(req: Request) {
           similarity,
         })
         .from(documents)
-        .where(sql`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)}::vector) > 0.5`)
         .orderBy((t) => desc(t.similarity))
         .limit(5);
 
