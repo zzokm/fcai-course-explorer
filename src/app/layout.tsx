@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono, Rubik } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -14,6 +14,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const rubik = Rubik({
+  subsets: ["arabic", "latin"],
+  variable: "--font-rubik",
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
   title: "FCAI Courses",
   description: "Course information and exploration platform",
@@ -24,7 +30,7 @@ import { AdvisorChatbot } from "@/components/ui/advisor-chatbot";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jakarta.variable} ${jetbrainsMono.variable}`}>
+      <body className={`${jakarta.variable} ${jetbrainsMono.variable} ${rubik.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <AdvisorChatbot />

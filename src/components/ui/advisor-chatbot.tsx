@@ -722,7 +722,9 @@ export function AdvisorChatbot() {
                     )}
                     {messages.map((m) => (
                       <div key={m.id} style={{ display: 'flex', justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
-                        <div style={{
+                        <div 
+                          dir="auto"
+                          style={{
                           maxWidth: '85%',
                           padding: '0.75rem 1rem',
                           fontSize: '0.875rem',
@@ -753,6 +755,7 @@ export function AdvisorChatbot() {
                   <form onSubmit={handleSubmit} style={{ padding: '1rem', borderTop: '1px solid var(--card-border-outer)', display: 'flex', gap: '0.5rem', background: 'var(--card-bg-outer)', borderBottomLeftRadius: '1.5rem', borderBottomRightRadius: '1.5rem' }}>
                     <input
                       type="text"
+                      dir="auto"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       placeholder="Ask about bylaws or courses..."
