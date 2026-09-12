@@ -46,6 +46,7 @@ export async function POST(req: Request) {
     const filesToIngest = [
       "newBylaw_2024_translatedEN.md",
       "oldBylawAI_2020_translatedEN.md",
+      "major_minimum_gpas.md",
     ];
 
     let totalChunks = 0;
