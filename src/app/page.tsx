@@ -7,7 +7,7 @@ export default function Home() {
     <main style={{ position: 'relative', minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
       <div className="radial-mesh" />
       <ThemeToggle />
-      <div style={{ width: '100%', padding: '2rem' }}>
+      <div style={{ width: '100%', padding: 'clamp(1rem, 4vw, 2rem)' }}>
         <MajorBento />
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', marginBottom: '2rem' }}>
           <Disclaimer />

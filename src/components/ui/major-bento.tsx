@@ -49,22 +49,14 @@ export function MajorBento() {
   return (
     <div className="container" style={{ maxWidth: '1400px' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>FCAI Courses Explorer</h1>
+        <h1 style={{ marginBottom: '0.5rem' }}>FCAI Courses Explorer</h1>
         <p style={{ maxWidth: '600px', margin: '0 auto' }}>Select a specialization to explore its full curriculum and requirements.</p>
       </div>
       
-      {/* Symmetrical Grid: 3 items top row, 2 items bottom row centered */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', width: '100%', maxWidth: '1200px' }}>
-          {majors.slice(0, 3).map((major, i) => (
-            <MajorCard key={major.id} major={major} index={i} />
-          ))}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', width: '100%', maxWidth: '800px' }}>
-          {majors.slice(3, 5).map((major, i) => (
-            <MajorCard key={major.id} major={major} index={i + 3} />
-          ))}
-        </div>
+      <div className="bento-grid">
+        {majors.map((major, i) => (
+          <MajorCard key={major.id} major={major} index={i} />
+        ))}
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ export default async function MajorPage({ params }: { params: { id: string } }) 
     return (
       <div key={section.title} style={{ marginTop: '3rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--card-border-outer)' }}>
-          <h2 style={{ fontSize: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
+          <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
             {displayTitle}{isElective && <ElectiveInfo creditHours={section.credit_hours} />}
           </h2>
           <span style={{ fontSize: '1rem', opacity: 0.7, background: 'var(--card-bg-outer)', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>
@@ -138,7 +138,7 @@ export default async function MajorPage({ params }: { params: { id: string } }) 
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--card-bg-outer)', padding: '1rem', borderRadius: '1.5rem', marginBottom: '1.5rem', color: 'var(--foreground)' }}>
             {majorIcons[id] && React.createElement(majorIcons[id], { size: 48, weight: "light" })}
           </div>
-          <h1 style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>{majorData.title}</h1>
+          <h1 style={{ marginBottom: '1rem' }}>{majorData.title}</h1>
           <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto', opacity: 0.8 }}>
             Total Credit Hours: <strong style={{ color: 'var(--foreground)' }}>{calculatedTotalCredits}</strong>
           </p>

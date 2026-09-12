@@ -417,13 +417,6 @@ export function AdvisorChatbot() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
             style={{
-              position: 'absolute',
-              bottom: '4.5rem',
-              right: 0,
-              maxHeight: 'calc(100vh - 6rem)',
-              borderRadius: '1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
               ...glassStyle
             }}
           >
