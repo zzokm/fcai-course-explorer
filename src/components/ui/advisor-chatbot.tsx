@@ -8,7 +8,7 @@ import { CustomDropdown } from "./custom-dropdown";
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
   { id: "anthropic", name: "Anthropic", defaultModel: "claude-3-5-sonnet-20240620" },
-  { id: "google", name: "Google Gemini", defaultModel: "gemini-1.5-flash" },
+  { id: "google", name: "Google Gemini", defaultModel: "gemini-3.6-flash" },
   { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "openrouter", name: "OpenRouter", defaultModel: "meta-llama/llama-3.1-8b-instruct:free" },
 ];
@@ -209,11 +209,13 @@ export function AdvisorChatbot() {
       setMessages(prev => [...prev, { id: aiMsgId, role: "assistant", content: "" }]);
 
       let done = false;
+      let fullText = "";
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
         if (value) {
           const chunk = decoder.decode(value, { stream: true });
+          fullText += chunk;
           setMessages(prev => {
             const last = prev[prev.length - 1];
             if (last.id === aiMsgId) {
@@ -222,6 +224,12 @@ export function AdvisorChatbot() {
             return prev;
           });
         }
+      }
+
+      if (fullText.trim() === "") {
+        // Remove the empty message bubble
+        setMessages(prev => prev.filter(m => m.id !== aiMsgId));
+        throw new Error("The AI provider returned an empty response. The selected model may be deprecated, unavailable, or your API key lacks access.");
       }
     } catch (err: any) {
       setError(err);
@@ -615,7 +623,7 @@ export function AdvisorChatbot() {
                       <div style={{ fontSize: '0.75rem', color: '#ef4444', textAlign: 'center', padding: '0.75rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '0.75rem' }}>
                         {error.message === "Unauthorized" || error.message.includes("401") 
                           ? "API Key is invalid or expired. Please check settings." 
-                          : "An error occurred. Please try again."}
+                          : error.message}
                       </div>
                     )}
                     <div ref={messagesEndRef} style={{ height: 1 }} />

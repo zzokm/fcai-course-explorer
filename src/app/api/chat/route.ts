@@ -101,6 +101,9 @@ export async function POST(req: Request) {
       model: customProvider(modelName),
       system: systemPrompt,
       messages,
+      onError: ({ error }) => {
+        console.error("StreamText internal error:", error);
+      }
     });
 
     return result.toTextStreamResponse();
