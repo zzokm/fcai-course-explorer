@@ -89,6 +89,7 @@ export function AdvisorChatbot() {
     
     setSessions(loadedSessions);
     setCurrentSessionId(loadedSessions[0].id);
+    setMessages(loadedSessions[0].messages);
 
     if (savedKey) {
       setView("chat");
@@ -163,6 +164,7 @@ export function AdvisorChatbot() {
     });
     
     setCurrentSessionId(newId);
+    setMessages([]);
     setView("chat");
   };
 
@@ -250,12 +252,7 @@ export function AdvisorChatbot() {
     }
   };
 
-  // Sync messages when session changes
-  useEffect(() => {
-    if (currentSession) {
-      setMessages(currentSession.messages);
-    }
-  }, [currentSessionId]);
+
 
   // Save messages to local storage whenever they change
   useEffect(() => {
@@ -305,18 +302,30 @@ export function AdvisorChatbot() {
 
   const deleteSession = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSessions(prev => {
-      const next = prev.filter(s => s.id !== id);
-      localStorage.setItem("advisor_sessions", JSON.stringify(next));
-      if (currentSessionId === id) {
-        if (next.length > 0) {
-          setCurrentSessionId(next[0].id);
-        } else {
-          createNewSession();
-        }
+    
+    const nextSessions = sessions.filter(s => s.id !== id);
+    let finalSessions = nextSessions;
+    
+    if (currentSessionId === id) {
+      if (nextSessions.length > 0) {
+        setCurrentSessionId(nextSessions[0].id);
+        setMessages(nextSessions[0].messages);
+      } else {
+        const newId = Date.now().toString() + "-" + Math.random().toString(36).substring(2, 9);
+        const newSession: ChatSession = {
+          id: newId,
+          title: "New Conversation",
+          updatedAt: Date.now(),
+          messages: []
+        };
+        finalSessions = [newSession];
+        setCurrentSessionId(newId);
+        setMessages([]);
       }
-      return next;
-    });
+    }
+    
+    setSessions(finalSessions);
+    localStorage.setItem("advisor_sessions", JSON.stringify(finalSessions));
   };
 
   const saveTitle = (id: string) => {
@@ -542,7 +551,7 @@ export function AdvisorChatbot() {
                     {sessions.map(s => (
                       <div 
                         key={s.id}
-                        onClick={() => { if (editingSessionId !== s.id) { setCurrentSessionId(s.id); setView("chat"); } }}
+                        onClick={() => { if (editingSessionId !== s.id) { setCurrentSessionId(s.id); setMessages(s.messages); setView("chat"); } }}
                         onMouseEnter={() => setHoveredSessionId(s.id)}
                         onMouseLeave={() => setHoveredSessionId(null)}
                         style={{
