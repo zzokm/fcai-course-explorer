@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple } from "@phosphor-icons/react";
+import { CustomDropdown } from "./custom-dropdown";
 
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
@@ -441,59 +442,17 @@ export function AdvisorChatbot() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{ position: 'relative' }}>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>AI Provider</label>
-                      <div 
-                        onClick={() => setIsProviderDropdownOpen(!isProviderDropdownOpen)}
-                        style={{ ...inputStyle, width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.875rem', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                      >
-                        <span>{PROVIDERS.find(p => p.id === provider)?.name || "Select Provider"}</span>
-                        <CaretDown size={16} weight="bold" style={{ transform: isProviderDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
-                      </div>
-
-                      <AnimatePresence>
-                        {isProviderDropdownOpen && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ duration: 0.15 }}
-                            style={{ 
-                              position: 'absolute', 
-                              top: 'calc(100% + 0.5rem)', 
-                              left: 0, 
-                              right: 0, 
-                              background: 'var(--background)', 
-                              border: '1px solid var(--card-border-outer)', 
-                              borderRadius: '0.75rem', 
-                              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)',
-                              zIndex: 10,
-                              overflow: 'hidden'
-                            }}
-                          >
-                            {PROVIDERS.map(p => (
-                              <div 
-                                key={p.id}
-                                onClick={() => {
-                                  setProvider(p.id);
-                                  // Clear model so we fetch new ones
-                                  setModel(p.defaultModel);
-                                  setIsProviderDropdownOpen(false);
-                                }}
-                                style={{
-                                  padding: '0.75rem 1rem',
-                                  fontSize: '0.875rem',
-                                  cursor: 'pointer',
-                                  background: provider === p.id ? 'var(--card-bg-outer)' : 'transparent',
-                                  transition: 'background 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--card-bg-outer)'}
-                                onMouseLeave={(e) => e.currentTarget.style.background = provider === p.id ? 'var(--card-bg-outer)' : 'transparent'}
-                              >
-                                {p.name}
-                              </div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      <CustomDropdown
+                        value={provider}
+                        options={PROVIDERS}
+                        onChange={(val) => {
+                          setProvider(val);
+                          const p = PROVIDERS.find(x => x.id === val);
+                          if (p) setModel(p.defaultModel);
+                        }}
+                        placeholder="Select Provider"
+                        triggerStyle={{ background: 'transparent' }}
+                      />
                     </div>
 
                     <div>
@@ -528,63 +487,17 @@ export function AdvisorChatbot() {
                         <div style={{ position: 'relative' }}>
                           <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>Model</label>
                           
-                          {/* Custom Model Dropdown */}
-                          <div 
-                            onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                            style={{ ...inputStyle, width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.875rem', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                          >
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginRight: '0.5rem' }}>
-                              {availableModels.find(m => m.id === model)?.name || model || "Select Model"}
-                            </span>
-                            <CaretDown size={16} weight="bold" style={{ transform: isModelDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }} />
-                          </div>
-
-                          <AnimatePresence>
-                            {isModelDropdownOpen && (
-                              <motion.div 
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.15 }}
-                                style={{ 
-                                  position: 'absolute', 
-                                  top: 'calc(100% + 0.5rem)', 
-                                  left: 0, 
-                                  right: 0, 
-                                  background: 'var(--background)', 
-                                  border: '1px solid var(--card-border-outer)', 
-                                  borderRadius: '0.75rem', 
-                                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)',
-                                  zIndex: 10,
-                                  maxHeight: '200px',
-                                  overflowY: 'auto'
-                                }}
-                              >
-                                {availableModels.length === 0 ? (
-                                  <div style={{ padding: '0.75rem 1rem', fontSize: '0.875rem', opacity: 0.5 }}>No models found</div>
-                                ) : availableModels.map(m => (
-                                  <div 
-                                    key={m.id}
-                                    onClick={() => {
-                                      setModel(m.id);
-                                      setIsModelDropdownOpen(false);
-                                    }}
-                                    style={{
-                                      padding: '0.75rem 1rem',
-                                      fontSize: '0.875rem',
-                                      cursor: 'pointer',
-                                      background: model === m.id ? 'var(--card-bg-outer)' : 'transparent',
-                                      transition: 'background 0.2s'
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--card-bg-outer)'}
-                                    onMouseLeave={(e) => e.currentTarget.style.background = model === m.id ? 'var(--card-bg-outer)' : 'transparent'}
-                                  >
-                                    {m.name}
-                                  </div>
-                                ))}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                          <CustomDropdown
+                            value={model}
+                            options={availableModels.length > 0 ? availableModels : [{ id: "", name: "No models found" }]}
+                            disabled={availableModels.length === 0}
+                            onChange={(val) => {
+                              setModel(val);
+                            }}
+                            placeholder="Select Model"
+                            triggerStyle={{ background: 'transparent' }}
+                            dropdownStyle={{ maxHeight: '200px' }}
+                          />
                         </div>
                       </motion.div>
                     )}
