@@ -65,6 +65,18 @@ export function AdvisorChatbot() {
   const [lastActiveSession, setLastActiveSession] = useState<ChatSession | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Animated Pill Text State
+  const phrases = ["Ask AI", "Have a question?", "Need course advice?", "Check prerequisites"];
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) return;
+    const interval = setInterval(() => {
+      setPhraseIndex(i => (i + 1) % phrases.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isOpen, phrases.length]);
+
   // Initialize
   useEffect(() => {
     setIsClient(true);
@@ -828,23 +840,54 @@ export function AdvisorChatbot() {
       {/* Floating Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.05 }}
+        whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.95 }}
+        layout
         style={{
-          width: '3.5rem',
           height: '3.5rem',
-          borderRadius: '50%',
+          width: isOpen ? '3.5rem' : 'auto',
+          padding: isOpen ? '0' : '0 1.25rem 0 1rem',
+          borderRadius: '9999px',
           border: 'none',
           background: 'var(--foreground)',
           color: 'var(--background)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: '0.6rem',
           cursor: 'pointer',
           boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+          overflow: 'hidden'
         }}
       >
-        {isOpen ? <X size={24} weight="bold" /> : <ChatTeardropText size={28} weight="fill" />}
+        <motion.div layout style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {isOpen ? <X size={24} weight="bold" /> : <ChatTeardropText size={24} weight="fill" />}
+        </motion.div>
+        
+        {!isOpen && (
+          <div style={{ position: 'relative', height: '1.2rem', minWidth: '135px', overflow: 'hidden' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={phraseIndex}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'backOut' }}
+                style={{
+                  position: 'absolute',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  letterSpacing: '-0.01em',
+                  left: 0,
+                  top: 0
+                }}
+              >
+                {phrases[phraseIndex]}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
       </motion.button>
     </div>
   );
