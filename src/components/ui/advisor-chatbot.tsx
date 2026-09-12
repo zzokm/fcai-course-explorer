@@ -538,7 +538,7 @@ export function AdvisorChatbot() {
                       <Plus size={18} weight="bold" /> New Chat
                     </button>
                   </div>
-                  <div style={{ flex: 1, overflowY: 'auto', padding: '0.5rem' }}>
+                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0.5rem' }}>
                     {sessions.map(s => (
                       <div 
                         key={s.id}
@@ -601,7 +601,7 @@ export function AdvisorChatbot() {
               ) : (
                 /* Chat Screen */
                 <>
-                  <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {messages.length === 0 && (
                       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: 0.5, padding: '1rem' }}>
                         <ChatTeardropText size={48} style={{ marginBottom: '1rem' }} />
