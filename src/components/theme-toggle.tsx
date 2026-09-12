@@ -14,6 +14,10 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
     return (
       <div 
         style={{ 
+          position: 'absolute',
+          top: '1.5rem',
+          right: '1.5rem',
+          zIndex: 40,
           width: '72px', 
           height: '38px', 
           borderRadius: '9999px',
@@ -31,7 +35,10 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Toggle theme"
       style={{
-        position: 'relative',
+        position: 'absolute',
+        top: '1.5rem',
+        right: '1.5rem',
+        zIndex: 40,
         width: '72px',
         height: '38px',
         borderRadius: '9999px',
