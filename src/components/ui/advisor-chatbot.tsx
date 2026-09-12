@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple } from "@phosphor-icons/react";
+import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple, CornersOut, CornersIn } from "@phosphor-icons/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -35,6 +35,7 @@ type ChatSession = {
 
 export function AdvisorChatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
   const [view, setView] = useState<"chat" | "settings" | "history">("settings");
   const [isClient, setIsClient] = useState(false);
@@ -411,7 +412,7 @@ export function AdvisorChatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="chatbox-window"
+            className={`chatbox-window ${isFullscreen ? 'chatbox-fullscreen' : ''}`}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -460,7 +461,18 @@ export function AdvisorChatbot() {
                     </button>
                   </>
                 )}
-                <button onClick={() => setIsOpen(false)} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
+                <button 
+                  className="chatbox-fullscreen-btn"
+                  onClick={() => setIsFullscreen(!isFullscreen)} 
+                  style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
+                >
+                  {isFullscreen ? <CornersIn size={20} /> : <CornersOut size={20} />}
+                </button>
+                <button 
+                  className="chatbox-close-btn"
+                  onClick={() => setIsOpen(false)} 
+                  style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
+                >
                   <X size={20} />
                 </button>
               </div>
