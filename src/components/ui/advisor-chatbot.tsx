@@ -427,6 +427,73 @@ export function AdvisorChatbot() {
     borderBottomLeftRadius: '0.25rem',
   };
 
+  const stickyHeaderStyle: React.CSSProperties = {
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '1rem 1.25rem',
+    borderBottom: '1px solid var(--card-border-outer)',
+    background: 'var(--card-bg-inner)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    flexShrink: 0,
+  };
+
+  const ChatHeader = (
+    <div style={stickyHeaderStyle}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {view !== "chat" && hasAcceptedDisclaimer ? (
+          <button onClick={() => setView("chat")} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--foreground)', display: 'flex', alignItems: 'center', padding: '0.25rem' }}>
+            <CaretLeft size={20} weight="bold" />
+          </button>
+        ) : (
+          <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', background: 'var(--foreground)', color: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ChatTeardropText size={18} weight="fill" />
+          </div>
+        )}
+        <div>
+          <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>
+            {view === "settings" ? "Configuration" : view === "history" ? "Chat History" : "FCAI Advisor"}
+          </h3>
+          {view === "chat" && <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.6 }}>AI Academic Assistant</p>}
+        </div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+        {hasAcceptedDisclaimer && view === "chat" && (
+          <>
+            <button onClick={() => createNewSession()} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
+              <Plus size={20} />
+            </button>
+            <button onClick={() => setView("history")} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
+              <List size={20} />
+            </button>
+            <button onClick={() => setView("settings")} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
+              <Gear size={20} />
+            </button>
+          </>
+        )}
+        <button
+          className="chatbox-fullscreen-btn"
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
+        >
+          {isFullscreen ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
+        </button>
+        <button
+          className="chatbox-close-btn"
+          onClick={() => setIsOpen(false)}
+          style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
+        >
+          <X size={20} />
+        </button>
+      </div>
+    </div>
+  );
+
+
   return (
     <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 50, fontFamily: 'var(--font-jakarta)' }}>
       <AnimatePresence>
@@ -455,73 +522,16 @@ export function AdvisorChatbot() {
               }} />
             )}
 
-            {/* Header */}
-            <div className="chat-header-blur" style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1rem 1.25rem',
-              borderBottom: '1px solid var(--card-border-outer)',
-              borderTopLeftRadius: '1.5rem',
-              borderTopRightRadius: '1.5rem'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                {view !== "chat" && hasAcceptedDisclaimer ? (
-                  <button onClick={() => setView("chat")} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--foreground)', display: 'flex', alignItems: 'center', padding: '0.25rem' }}>
-                    <CaretLeft size={20} weight="bold" />
-                  </button>
-                ) : (
-                  <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', background: 'var(--foreground)', color: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ChatTeardropText size={18} weight="fill" />
-                  </div>
-                )}
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>{view === "settings" ? "Configuration" : view === "history" ? "Chat History" : "FCAI Advisor"}</h3>
-                  {view === "chat" && <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.6 }}>AI Academic Assistant</p>}
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                {hasAcceptedDisclaimer && view === "chat" && (
-                  <>
-                    <button onClick={() => createNewSession()} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
-                      <Plus size={20} />
-                    </button>
-                    <button onClick={() => setView("history")} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
-                      <List size={20} />
-                    </button>
-                    <button onClick={() => setView("settings")} style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}>
-                      <Gear size={20} />
-                    </button>
-                  </>
-                )}
-                <button 
-                  className="chatbox-fullscreen-btn"
-                  onClick={() => setIsFullscreen(!isFullscreen)} 
-                  style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
-                >
-                  {isFullscreen ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
-                </button>
-                <button 
-                  className="chatbox-close-btn"
-                  onClick={() => setIsOpen(false)} 
-                  style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-            </div>
+            {/* Header - REMOVED from absolute, now injected per-view inside scroll */}
 
             {/* Content Area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
               
               {!hasAcceptedDisclaimer ? (
                 /* Disclaimer Screen */
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', paddingTop: '4rem', paddingBottom: '2rem', paddingLeft: '2rem', paddingRight: '2rem', textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+                  {ChatHeader}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '2rem', textAlign: 'center' }}>
                   <div style={{ width: '4rem', height: '4rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
                     <WarningCircle size={32} weight="fill" />
                   </div>
@@ -534,10 +544,13 @@ export function AdvisorChatbot() {
                   <button onClick={acceptDisclaimer} style={{ ...btnPrimaryStyle, width: '100%', padding: '0.875rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
                     I Understand and Agree
                   </button>
+                  </div>
                 </div>
               ) : view === "settings" ? (
                 /* Settings Screen */
-                <div className="custom-scrollbar" style={{ flex: 1, padding: '5rem 1.5rem 1.5rem', overflowY: 'auto' }}>
+                <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                  {ChatHeader}
+                  <div style={{ padding: '1.5rem' }}>
                   <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', opacity: 0.7 }}>Bring your own key (BYOK) to use the advisor. Keys are stored securely in your browser's local storage.</p>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -624,10 +637,12 @@ export function AdvisorChatbot() {
                   >
                     <CheckCircle size={20} /> Save Configuration
                   </button>
+                  </div>
                 </div>
               ) : view === "history" ? (
                 /* History Screen */
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingTop: '3.5rem' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  {ChatHeader}
                   <div style={{ padding: '1rem', borderBottom: '1px solid var(--card-border-outer)' }}>
                     <button onClick={() => createNewSession()} style={{ ...btnPrimaryStyle, width: '100%', padding: '0.75rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                       <Plus size={18} weight="bold" /> New Chat
@@ -696,8 +711,9 @@ export function AdvisorChatbot() {
               ) : (
                 /* Chat Screen */
                 <>
-                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{ height: '3.5rem', flexShrink: 0 }} />
+                  <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    {ChatHeader}
+                    <div style={{ padding: '0.75rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {messages.length === 0 && (
                       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: 0.5, padding: '1rem' }}>
                         <ChatTeardropText size={48} style={{ marginBottom: '1rem' }} />
@@ -730,6 +746,7 @@ export function AdvisorChatbot() {
                       </div>
                     )}
                     <div ref={messagesEndRef} style={{ height: 1 }} />
+                    </div>
                   </div>
 
                   {/* Input Form */}
