@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Moon, Sun } from "@phosphor-icons/react";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 
 export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
@@ -48,11 +49,14 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
         padding: '4px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: isDark ? 'flex-end' : 'flex-start',
         transition: 'background 0.3s ease',
         ...style
       }}
     >
-      <div
+      <motion.div
+        layout
+        transition={{ type: "spring", stiffness: 700, damping: 30 }}
         style={{
           width: '30px',
           height: '30px',
@@ -63,16 +67,17 @@ export function ThemeToggle({ style }: { style?: React.CSSProperties }) {
           alignItems: 'center',
           justifyContent: 'center',
           color: 'var(--foreground)',
-          transform: `translateX(${isDark ? '34px' : '0'})`,
-          transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s ease',
         }}
       >
-        {isDark ? (
-          <Moon size={16} weight="fill" />
-        ) : (
-          <Sun size={16} weight="fill" />
-        )}
-      </div>
+        <motion.div
+          key={isDark ? "dark" : "light"}
+          initial={{ y: -10, opacity: 0, scale: 0.5 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          {isDark ? <Moon size={16} weight="fill" /> : <Sun size={16} weight="fill" />}
+        </motion.div>
+      </motion.div>
     </button>
   );
 }
