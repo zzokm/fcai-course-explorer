@@ -1,5 +1,6 @@
 import { MajorBento } from "@/components/ui/major-bento";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Disclaimer } from "@/components/ui/disclaimer";
 
 export default function Home() {
   return (
@@ -8,6 +9,9 @@ export default function Home() {
       <ThemeToggle />
       <div style={{ width: '100%', padding: '2rem' }}>
         <MajorBento />
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', marginBottom: '2rem' }}>
+          <Disclaimer />
+        </div>
       </div>
     </main>
   );
