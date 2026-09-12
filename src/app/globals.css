@@ -1,0 +1,191 @@
+:root {
+  --background: #FDFBF7;
+  --foreground: #1A1A1A;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Card Colors Light */
+  --card-bg-outer: rgba(0, 0, 0, 0.03);
+  --card-border-outer: rgba(0, 0, 0, 0.05);
+  --card-bg-inner: rgba(255, 255, 255, 0.6);
+  --card-shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  
+  --mesh-gradient: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, rgba(253, 251, 247, 0) 70%);
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #F4F1EA;
+
+  /* Card Colors Dark */
+  --card-bg-outer: rgba(255, 255, 255, 0.03);
+  --card-border-outer: rgba(255, 255, 255, 0.05);
+  --card-bg-inner: rgba(0, 0, 0, 0.4);
+  --card-shadow-inner: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+
+  --mesh-gradient: radial-gradient(circle, rgba(79, 195, 255, 0.05) 0%, rgba(5, 5, 5, 0) 70%);
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-jakarta, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Typography Scale */
+h1 { font-size: 3.5rem; line-height: 1; letter-spacing: -0.02em; font-weight: 700; margin: 0; }
+h2 { font-size: 2.25rem; line-height: 1.1; font-weight: 600; margin: 0; }
+p { font-size: 1.125rem; line-height: 1.6; margin: 0; opacity: 0.7; }
+small { font-size: 0.875rem; opacity: 0.5; }
+
+/* Double-Bezel Architecture */
+.card-outer {
+  background: var(--card-bg-outer);
+  border: 1px solid var(--card-border-outer);
+  border-radius: 2rem;
+  padding: 0.5rem;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.dark .card-outer {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.card-outer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+}
+
+.dark .card-outer:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+}
+
+.card-inner {
+  background: var(--card-bg-inner);
+  border-radius: calc(2rem - 0.5rem);
+  box-shadow: var(--card-shadow-inner);
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Button-in-Button Architecture */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  background: var(--foreground);
+  color: var(--background);
+  border-radius: 9999px;
+  padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.btn-primary:hover {
+  transform: scale(0.98);
+}
+
+.btn-icon-wrapper {
+  background: rgba(128, 128, 128, 0.2);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.btn-primary:hover .btn-icon-wrapper {
+  transform: translateX(4px) translateY(-1px) scale(1.05);
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.hero-section {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background effects */
+.radial-mesh {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80vw;
+  height: 80vw;
+  transform: translate(-50%, -50%);
+  background: var(--mesh-gradient);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Symmetrical Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fade-up-enter {
+  opacity: 0;
+  transform: translateY(2rem);
+  filter: blur(8px);
+}
+.fade-up-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition: opacity 0.8s cubic-bezier(0.32, 0.72, 0, 1), transform 0.8s cubic-bezier(0.32, 0.72, 0, 1), filter 0.8s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Expandable overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+}
