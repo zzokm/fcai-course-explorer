@@ -57,20 +57,22 @@ export async function POST(req: Request) {
     let contextText = "";
     
     try {
-      // 1. Generate embedding for the user's query using the Server's Google Gemini API key
+      // 1. Generate embedding for the recent chat context using the Server's Google Gemini API key
+      const contextMessages = messages.slice(-3).map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join("\n");
       const { embedding } = await embed({
         model: google.textEmbeddingModel("gemini-embedding-001"),
-        value: lastMessage.content,
+        value: contextMessages,
       });
 
       // 2. Perform similarity search in pgvector
-      const similarity = sql<number>`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)})`;
+      const similarity = sql<number>`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)}::vector)`;
       const similarDocs = await db
         .select({
           content: documents.content,
           similarity,
         })
         .from(documents)
+        .where(sql`1 - (${documents.embedding} <=> ${JSON.stringify(embedding)}::vector) > 0.5`)
         .orderBy((t) => desc(t.similarity))
         .limit(5);
 
