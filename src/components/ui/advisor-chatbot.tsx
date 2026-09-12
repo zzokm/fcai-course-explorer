@@ -60,6 +60,7 @@ export function AdvisorChatbot() {
   const [editingTitle, setEditingTitle] = useState("");
   const [hoveredSessionId, setHoveredSessionId] = useState<string | null>(null);
 
+  const [lastActiveSession, setLastActiveSession] = useState<ChatSession | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialize
@@ -86,21 +87,24 @@ export function AdvisorChatbot() {
       } catch (e) {}
     }
 
-    if (loadedSessions.length === 0) {
-      const newId = Date.now().toString() + "-" + Math.random().toString(36).substring(2, 9);
-      const newSession: ChatSession = {
-        id: newId,
-        title: "New Conversation",
-        updatedAt: Date.now(),
-        messages: []
-      };
-      loadedSessions = [newSession];
-      localStorage.setItem("advisor_sessions", JSON.stringify(loadedSessions));
-    }
+    const recentSession = loadedSessions.find(s => s.messages.length > 0);
+    setLastActiveSession(recentSession || null);
+
+    const newId = Date.now().toString() + "-" + Math.random().toString(36).substring(2, 9);
+    const newSession: ChatSession = {
+      id: newId,
+      title: "New Conversation",
+      updatedAt: Date.now(),
+      messages: []
+    };
     
-    setSessions(loadedSessions);
-    setCurrentSessionId(loadedSessions[0].id);
-    setMessages(loadedSessions[0].messages);
+    // Clean up empty sessions
+    const cleaned = loadedSessions.filter(s => s.messages.length > 0);
+    const nextSessions = [newSession, ...cleaned];
+    
+    setSessions(nextSessions);
+    setCurrentSessionId(newId);
+    setMessages([]);
 
     if (savedKey) {
       setView("chat");
@@ -208,6 +212,13 @@ export function AdvisorChatbot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    if (view === "chat") {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, view]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -715,9 +726,22 @@ export function AdvisorChatbot() {
                     {ChatHeader}
                     <div style={{ padding: '0.75rem 1.25rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {messages.length === 0 && (
-                      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', opacity: 0.5, padding: '1rem' }}>
-                        <ChatTeardropText size={48} style={{ marginBottom: '1rem' }} />
-                        <p style={{ fontSize: '0.875rem', margin: 0, maxWidth: '200px' }}>Hi! Ask me anything about FCAI courses, prerequisites, or bylaws.</p>
+                      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '1rem' }}>
+                        <div style={{ opacity: 0.5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <ChatTeardropText size={48} style={{ marginBottom: '1rem' }} />
+                          <p style={{ fontSize: '0.875rem', margin: 0, maxWidth: '200px' }}>Hi! Ask me anything about FCAI courses, prerequisites, or bylaws.</p>
+                        </div>
+                        {lastActiveSession && (
+                          <button
+                            onClick={() => {
+                               setCurrentSessionId(lastActiveSession.id);
+                               setMessages(lastActiveSession.messages);
+                            }}
+                            style={{ ...btnPrimaryStyle, marginTop: '2rem', padding: '0.75rem 1.25rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 1 }}
+                          >
+                            Continue: {lastActiveSession.title.length > 25 ? lastActiveSession.title.substring(0, 25) + '...' : lastActiveSession.title}
+                          </button>
+                        )}
                       </div>
                     )}
                     {messages.map((m) => (
