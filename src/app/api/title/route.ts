@@ -9,12 +9,13 @@ export async function POST(req: Request) {
     const provider = req.headers.get("x-provider") || "openai";
     const apiKey = req.headers.get("x-api-key");
     const modelName = req.headers.get("x-model") || "gpt-4o-mini";
+    const customBaseUrl = req.headers.get("x-base-url") || undefined;
 
     if (!apiKey) {
       return NextResponse.json({ error: "No API key provided." }, { status: 401 });
     }
 
-    const customProvider = getProviderClient(provider, apiKey);
+    const customProvider = getProviderClient(provider, apiKey, customBaseUrl);
 
     const { text } = await generateText({
       model: customProvider(modelName),

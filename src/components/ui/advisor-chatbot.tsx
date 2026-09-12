@@ -11,6 +11,10 @@ const PROVIDERS = [
   { id: "google", name: "Google Gemini", defaultModel: "gemini-1.5-flash" },
   { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "openrouter", name: "OpenRouter", defaultModel: "meta-llama/llama-3.1-8b-instruct:free" },
+  { id: "mistral", name: "Mistral", defaultModel: "mistral-large-latest" },
+  { id: "deepseek", name: "DeepSeek", defaultModel: "deepseek-chat" },
+  { id: "cerebras", name: "Cerebras", defaultModel: "llama3.1-8b" },
+  { id: "other", name: "Other (OpenAI Compatible)", defaultModel: "" }
 ];
 
 export type Message = {
@@ -36,6 +40,7 @@ export function AdvisorChatbot() {
   const [provider, setProvider] = useState("openai");
   const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState("gpt-4o-mini");
+  const [customBaseUrl, setCustomBaseUrl] = useState("");
   const [isProviderDropdownOpen, setIsProviderDropdownOpen] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
 
@@ -62,10 +67,12 @@ export function AdvisorChatbot() {
     const savedProvider = localStorage.getItem("advisor_provider");
     const savedKey = localStorage.getItem("advisor_api_key");
     const savedModel = localStorage.getItem("advisor_model");
+    const savedCustomUrl = localStorage.getItem("advisor_custom_url");
     
     if (savedProvider) setProvider(savedProvider);
     if (savedKey) setApiKey(savedKey);
     if (savedModel) setModel(savedModel);
+    if (savedCustomUrl) setCustomBaseUrl(savedCustomUrl);
 
     const savedSessionsStr = localStorage.getItem("advisor_sessions");
     let loadedSessions: ChatSession[] = [];
@@ -111,7 +118,8 @@ export function AdvisorChatbot() {
         const res = await fetch("/api/models", {
           headers: {
             "x-provider": provider,
-            "x-api-key": apiKey
+            "x-api-key": apiKey,
+            ...(provider === "other" && customBaseUrl ? { "x-base-url": customBaseUrl } : {})
           }
         });
         if (res.ok) {
@@ -137,7 +145,7 @@ export function AdvisorChatbot() {
 
     const timer = setTimeout(checkToken, 800);
     return () => clearTimeout(timer);
-  }, [apiKey, provider]); // Re-run if key or provider changes
+  }, [apiKey, provider, customBaseUrl]); // Re-run if key, provider, or url changes
 
   const createNewSession = () => {
     // If the current session is already empty, just switch to it and don't create duplicates
@@ -198,6 +206,7 @@ export function AdvisorChatbot() {
           "x-provider": provider,
           "x-api-key": apiKey,
           "x-model": model,
+          ...(provider === "other" && customBaseUrl ? { "x-base-url": customBaseUrl } : {})
         },
         body: JSON.stringify({ messages: newMessages })
       });
@@ -239,6 +248,7 @@ export function AdvisorChatbot() {
             "x-provider": provider,
             "x-api-key": apiKey,
             "x-model": model,
+            ...(provider === "other" && customBaseUrl ? { "x-base-url": customBaseUrl } : {})
           },
           body: JSON.stringify({ message: input })
         }).then(res => res.json()).then(data => {
@@ -313,6 +323,7 @@ export function AdvisorChatbot() {
     localStorage.setItem("advisor_provider", provider);
     localStorage.setItem("advisor_api_key", apiKey);
     localStorage.setItem("advisor_model", model);
+    localStorage.setItem("advisor_custom_url", customBaseUrl);
     setView("chat");
   };
 
@@ -520,6 +531,19 @@ export function AdvisorChatbot() {
                         </div>
                       </div>
                     </div>
+
+                    {provider === "other" && (
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>Provider Base URL</label>
+                        <input 
+                          type="text" 
+                          value={customBaseUrl} 
+                          onChange={(e) => setCustomBaseUrl(e.target.value)}
+                          placeholder="e.g. https://api.together.xyz/v1"
+                          style={{ ...inputStyle, width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.875rem', outline: 'none' }}
+                        />
+                      </div>
+                    )}
 
                     {/* Show Model Name only if Token is Valid */}
                     {isTokenValid && (

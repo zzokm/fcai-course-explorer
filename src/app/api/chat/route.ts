@@ -12,12 +12,11 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
 // Define the available providers and how to instantiate them with custom keys
-export function getProviderClient(provider: string, apiKey: string) {
+export function getProviderClient(provider: string, apiKey: string, customBaseUrl?: string) {
   switch (provider) {
     case "openai":
       return createOpenAI({ apiKey });
     case "anthropic":
-      // The AI SDK's createAnthropic isn't strictly required if you use standard but custom instances are usually created via createAnthropic or similar. 
       return createAnthropic({ apiKey });
     case "google":
       return createGoogleGenerativeAI({ apiKey });
@@ -26,17 +25,17 @@ export function getProviderClient(provider: string, apiKey: string) {
     case "groq":
     case "mistral":
     case "cerebras":
-      // Many of these provide OpenAI compatible APIs
-      let baseURL = "";
+    case "other":
+      let baseURL = customBaseUrl || "";
       if (provider === "openrouter") baseURL = "https://openrouter.ai/api/v1";
-      if (provider === "deepseek") baseURL = "https://api.deepseek.com/v1";
+      if (provider === "deepseek") baseURL = "https://api.deepseek.com/beta";
       if (provider === "groq") baseURL = "https://api.groq.com/openai/v1";
       if (provider === "mistral") baseURL = "https://api.mistral.ai/v1";
-      if (provider === "cerebras") baseURL = "https://api.cerebras.ai/v1"; // Example, adjust if needed
+      if (provider === "cerebras") baseURL = "https://api.cerebras.ai/v1";
       
-      return createOpenAI({ apiKey, baseURL });
+      return createOpenAI({ apiKey, baseURL: baseURL || undefined });
     default:
-      return createOpenAI({ apiKey }); // Default to OpenAI compatible
+      return createOpenAI({ apiKey, baseURL: customBaseUrl || undefined });
   }
 }
 
@@ -48,6 +47,7 @@ export async function POST(req: Request) {
   const provider = req.headers.get("x-provider") || "openai";
   const apiKey = req.headers.get("x-api-key");
   const modelName = req.headers.get("x-model") || "gpt-4o-mini";
+  const customBaseUrl = req.headers.get("x-base-url") || undefined;
 
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "No API key provided. Please set it in settings." }), { status: 401 });
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     </CONTEXT>`;
 
     // 4. Call the selected provider using BYOK
-    const customProvider = getProviderClient(provider, apiKey);
+    const customProvider = getProviderClient(provider, apiKey, customBaseUrl);
     
     const result = await streamText({
       model: customProvider(modelName),

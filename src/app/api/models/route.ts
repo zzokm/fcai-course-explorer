@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   const provider = req.headers.get("x-provider") || "openai";
   const apiKey = req.headers.get("x-api-key");
+  const customBaseUrl = req.headers.get("x-base-url") || undefined;
 
   if (!apiKey) {
     return NextResponse.json({ error: "No API key provided" }, { status: 401 });
@@ -11,23 +12,22 @@ export async function GET(req: Request) {
   try {
     let models: { id: string; name: string }[] = [];
 
-    if (provider === "openai") {
-      const res = await fetch("https://api.openai.com/v1/models", {
+    if (["openai", "deepseek", "groq", "mistral", "cerebras", "other"].includes(provider)) {
+      let url = "https://api.openai.com/v1/models";
+      if (provider === "deepseek") url = "https://api.deepseek.com/beta/models";
+      if (provider === "groq") url = "https://api.groq.com/openai/v1/models";
+      if (provider === "mistral") url = "https://api.mistral.ai/v1/models";
+      if (provider === "cerebras") url = "https://api.cerebras.ai/v1/models";
+      if (provider === "other" && customBaseUrl) url = `${customBaseUrl.replace(/\/$/, '')}/models`;
+
+      const res = await fetch(url, {
         headers: { Authorization: `Bearer ${apiKey}` },
       });
-      if (!res.ok) throw new Error("Invalid OpenAI key");
+      if (!res.ok) throw new Error(`Invalid ${provider} key`);
       const data = await res.json();
       models = data.data
-        .filter((m: any) => m.id.includes("gpt")) // Only chat models
+        .filter((m: any) => provider !== "openai" || m.id.includes("gpt") || m.id.includes("o1"))
         .map((m: any) => ({ id: m.id, name: m.id }));
-    } 
-    else if (provider === "groq") {
-      const res = await fetch("https://api.groq.com/openai/v1/models", {
-        headers: { Authorization: `Bearer ${apiKey}` },
-      });
-      if (!res.ok) throw new Error("Invalid Groq key");
-      const data = await res.json();
-      models = data.data.map((m: any) => ({ id: m.id, name: m.id }));
     }
     else if (provider === "openrouter") {
       const res = await fetch("https://openrouter.ai/api/v1/models", {
