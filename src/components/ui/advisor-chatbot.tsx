@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple, CornersOut, CornersIn } from "@phosphor-icons/react";
+import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple, ArrowsOutSimple, ArrowsInSimple } from "@phosphor-icons/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -476,7 +476,7 @@ export function AdvisorChatbot() {
                   onClick={() => setIsFullscreen(!isFullscreen)} 
                   style={{ background: 'transparent', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--foreground)', opacity: 0.6, borderRadius: '0.5rem' }}
                 >
-                  {isFullscreen ? <CornersIn size={20} /> : <CornersOut size={20} />}
+                  {isFullscreen ? <ArrowsInSimple size={20} /> : <ArrowsOutSimple size={20} />}
                 </button>
                 <button 
                   className="chatbox-close-btn"
