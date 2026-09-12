@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { MIN_GRADES } from "@/lib/data";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card";
-import { ArrowRight, Cpu, Database, PresentationChart, ChartLineUp, AppWindow, Brain } from "@phosphor-icons/react";
+import { ArrowRight, Cpu, Database, Network, ChartLineUp, AppWindow, Brain } from "@phosphor-icons/react";
 
 export const majors = [
   {
@@ -41,7 +41,7 @@ export const majors = [
     title: "Information Technology",
     grade: MIN_GRADES.Information_Technology,
     desc: "Master the infrastructure, networks, and systems that power the modern world.",
-    icon: <PresentationChart size={32} weight="light" />,
+    icon: <Network size={32} weight="light" />,
   },
 ];
 
