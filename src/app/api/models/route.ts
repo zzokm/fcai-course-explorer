@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
     if (["openai", "deepseek", "groq", "mistral", "cerebras", "moonshot", "ollama", "other"].includes(provider)) {
       let url = "https://api.openai.com/v1/models";
-      if (provider === "deepseek") url = "https://api.deepseek.com/beta/models";
+      if (provider === "deepseek") url = "https://api.deepseek.com/models";
       if (provider === "groq") url = "https://api.groq.com/openai/v1/models";
       if (provider === "mistral") url = "https://api.mistral.ai/v1/models";
       if (provider === "cerebras") url = "https://api.cerebras.ai/v1/models";

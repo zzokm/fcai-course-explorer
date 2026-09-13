@@ -30,7 +30,7 @@ export function getProviderClient(provider: string, apiKey: string, customBaseUr
     case "other":
       let baseURL = customBaseUrl || "";
       if (provider === "openrouter") baseURL = "https://openrouter.ai/api/v1";
-      if (provider === "deepseek") baseURL = "https://api.deepseek.com/beta";
+      if (provider === "deepseek") baseURL = "https://api.deepseek.com";
       if (provider === "groq") baseURL = "https://api.groq.com/openai/v1";
       if (provider === "mistral") baseURL = "https://api.mistral.ai/v1";
       if (provider === "cerebras") baseURL = "https://api.cerebras.ai/v1";
