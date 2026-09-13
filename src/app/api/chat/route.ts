@@ -127,7 +127,31 @@ export async function POST(req: Request) {
       }
     });
 
-    return result.toTextStreamResponse();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+        try {
+          for await (const chunk of result.textStream) {
+            controller.enqueue(encoder.encode(chunk));
+          }
+        } catch (error: any) {
+          let errorDetail = error instanceof Error ? error.message : String(error);
+          if (error.responseBody) {
+            errorDetail += `\n\n**Provider Response:**\n\`\`\`json\n${typeof error.responseBody === 'string' ? error.responseBody : JSON.stringify(error.responseBody, null, 2)}\n\`\`\``;
+          }
+          const errorMessage = `\n\n🚨 **AI Provider Technical Error**\n\nThe provider accepted the request but failed to stream a response. This is usually due to an API key issue, a non-existent model, or insufficient credits.\n\n**Error Details:**\n${errorDetail}`;
+          controller.enqueue(encoder.encode(errorMessage));
+        } finally {
+          controller.close();
+        }
+      }
+    });
+
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+    });
   } catch (error: any) {
     console.error("Chat API Error:", error);
     
