@@ -73,7 +73,8 @@ export function AdvisorChatbot() {
   // Auto-check Token State
   const [isCheckingToken, setIsCheckingToken] = useState(false);
   const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
-  const [availableModels, setAvailableModels] = useState<{id: string, name: string}[]>([]);
+  const [availableModels, setAvailableModels] = useState<{id: string, name: string, isFree?: boolean}[]>([]);
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
 
   // Multi-chat State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -682,7 +683,10 @@ export function AdvisorChatbot() {
                           
                           <CustomDropdown
                             value={model}
-                            options={availableModels.length > 0 ? availableModels : [{ id: "", name: "No models found" }]}
+                            options={availableModels.length > 0 
+                              ? (showFreeOnly ? availableModels.filter(m => m.isFree) : availableModels)
+                              : [{ id: "", name: "No models found" }]
+                            }
                             disabled={availableModels.length === 0}
                             onChange={(val) => {
                               setModel(val);
@@ -693,6 +697,25 @@ export function AdvisorChatbot() {
                             searchable={true}
                           />
                         </div>
+                        {provider === "openrouter" && availableModels.length > 0 && (
+                          <div style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <input
+                              type="checkbox"
+                              id="free-models-toggle"
+                              checked={showFreeOnly}
+                              onChange={(e) => setShowFreeOnly(e.target.checked)}
+                              style={{ 
+                                cursor: 'pointer',
+                                width: '14px',
+                                height: '14px',
+                                accentColor: 'var(--foreground)'
+                              }}
+                            />
+                            <label htmlFor="free-models-toggle" style={{ fontSize: '0.75rem', cursor: 'pointer', opacity: 0.7, fontWeight: 500 }}>
+                              Show Free Models Only
+                            </label>
+                          </div>
+                        )}
                       </motion.div>
                     )}
                   </div>

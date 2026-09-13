@@ -37,7 +37,14 @@ export async function GET(req: Request) {
       });
       if (!res.ok) throw new Error("Invalid OpenRouter key");
       const data = await res.json();
-      models = data.data.map((m: any) => ({ id: m.id, name: m.name || m.id }));
+      models = data.data.map((m: any) => {
+        const isFree = m.pricing && m.pricing.prompt === "0" && m.pricing.completion === "0";
+        return { 
+          id: m.id, 
+          name: `${m.name || m.id}${isFree ? ' (Free)' : ''}`,
+          isFree
+        };
+      });
     }
     else if (provider === "google") {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
