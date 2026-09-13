@@ -223,7 +223,7 @@ export function PrerequisiteTag({ code, chain, variant = "pill", displayName }: 
                       </div>
                       <div>
                         <div style={{ fontSize: '0.75rem', opacity: 0.5, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.2rem' }}>
-                          Prerequisite
+                          {variant === "markdown" ? "Course Details" : "Prerequisite"}
                         </div>
                         <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 700, lineHeight: 1.2 }}>
                           {course ? course.name : code}
