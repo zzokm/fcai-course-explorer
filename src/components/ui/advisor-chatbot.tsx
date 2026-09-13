@@ -19,10 +19,9 @@ function linkifyCourses(text: string) {
     if (i % 2 !== 0) return part;
     let replacedPart = part;
     for (const course of ALL_COURSES) {
-      if (!course.name || !course.code) continue;
-      const nameRegexStr = course.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (!course.code) continue;
       const codeRegexStr = course.code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const matchRegex = new RegExp(`\\b(${nameRegexStr}|${codeRegexStr})\\b`, 'g');
+      const matchRegex = new RegExp(`\\b(${codeRegexStr})\\b`, 'g');
       replacedPart = replacedPart.replace(matchRegex, `[$1](/course/${course.code})`);
     }
     return replacedPart;
