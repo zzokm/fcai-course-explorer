@@ -9,7 +9,7 @@ export default function Home() {
       <ThemeToggle />
       <div style={{ width: '100%', padding: 'clamp(1rem, 2vw, 1.5rem)' }}>
         <MajorBento />
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem', marginBottom: '1.5rem' }}>
           <Disclaimer />
         </div>
       </div>
