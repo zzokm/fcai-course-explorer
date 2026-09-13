@@ -64,6 +64,38 @@ export function getCourseByCode(code: string): Course | undefined {
   return search(data);
 }
 
+export function getAllCourses(): Course[] {
+  const data = getCoursesData();
+  const coursesMap = new Map<string, Course>();
+
+  function traverse(obj: any) {
+    if (!obj || typeof obj !== 'object') return;
+    
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        if (item && item.code && item.name) {
+          coursesMap.set(item.code, item);
+        }
+        traverse(item);
+      }
+    } else {
+      if (obj.courses && Array.isArray(obj.courses)) {
+        for (const c of obj.courses) {
+          if (c && c.code && c.name) {
+            coursesMap.set(c.code, c);
+          }
+        }
+      }
+      for (const key of Object.keys(obj)) {
+        traverse(obj[key]);
+      }
+    }
+  }
+  
+  traverse(data);
+  return Array.from(coursesMap.values());
+}
+
 export const MIN_GRADES = {
   Information_Systems: 2.70,
   Computer_Science: 2.56,

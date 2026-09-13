@@ -7,8 +7,27 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import { CustomDropdown } from "./custom-dropdown";
-import { getPrerequisiteChain } from "@/lib/data";
+import { getPrerequisiteChain, getAllCourses, Course } from "@/lib/data";
 import { PrerequisiteTag } from "./prerequisite-tag";
+
+// Pre-fetch courses and sort by name length descending to avoid partial matches
+const ALL_COURSES = getAllCourses().sort((a, b) => b.name.length - a.name.length);
+
+function linkifyCourses(text: string) {
+  const regex = /(\[.*?\]\(.*?\)|```[\s\S]*?```|`[^`]+`)/g;
+  return text.split(regex).map((part, i) => {
+    if (i % 2 !== 0) return part;
+    let replacedPart = part;
+    for (const course of ALL_COURSES) {
+      if (!course.name || !course.code) continue;
+      const nameRegexStr = course.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const codeRegexStr = course.code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const matchRegex = new RegExp(`\\b(${nameRegexStr}|${codeRegexStr})\\b`, 'g');
+      replacedPart = replacedPart.replace(matchRegex, `[$1](/course/${course.code})`);
+    }
+    return replacedPart;
+  }).join('');
+}
 
 const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
@@ -798,13 +817,13 @@ export function AdvisorChatbot() {
                                 if (href?.startsWith('/course/')) {
                                   const code = href.replace('/course/', '');
                                   const chain = getPrerequisiteChain(code);
-                                  return <PrerequisiteTag code={code} chain={chain} variant="markdown" />;
+                                  return <PrerequisiteTag code={code} chain={chain} variant="markdown" displayName={children} />;
                                 }
                                 return <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', fontWeight: 600 }} {...props}>{children}</a>;
                               }
                             }}
                           >
-                            {m.content}
+                            {linkifyCourses(m.content)}
                           </ReactMarkdown>
                         </div>
                       </div>

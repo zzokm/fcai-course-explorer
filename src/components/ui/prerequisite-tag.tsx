@@ -122,7 +122,7 @@ function PrereqTreeNode({ node, depth = 0 }: { node: PrereqNode; depth?: number 
   );
 }
 
-export function PrerequisiteTag({ code, chain, variant = "pill" }: { code: string; chain: PrereqNode; variant?: "pill" | "markdown" }) {
+export function PrerequisiteTag({ code, chain, variant = "pill", displayName }: { code: string; chain: PrereqNode; variant?: "pill" | "markdown"; displayName?: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const course = chain.course;
@@ -155,6 +155,7 @@ export function PrerequisiteTag({ code, chain, variant = "pill" }: { code: strin
           style={{
             background: 'var(--card-bg-outer)',
             border: '1px solid var(--card-border-outer)',
+            borderBottom: '1px dotted currentColor',
             padding: '0.1rem 0.45rem',
             borderRadius: '0.4rem',
             fontFamily: 'var(--font-mono)',
@@ -170,7 +171,7 @@ export function PrerequisiteTag({ code, chain, variant = "pill" }: { code: strin
           }}
         >
           <BookOpen size={14} weight="bold" />
-          {code}
+          {displayName || code}
         </span>
       )}
 
