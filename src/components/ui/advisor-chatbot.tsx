@@ -32,11 +32,13 @@ const PROVIDERS = [
   { id: "openai", name: "OpenAI", defaultModel: "gpt-4o-mini" },
   { id: "anthropic", name: "Anthropic", defaultModel: "claude-3-5-sonnet-20240620" },
   { id: "google", name: "Google Gemini", defaultModel: "gemini-1.5-flash" },
-  { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "openrouter", name: "OpenRouter", defaultModel: "meta-llama/llama-3.1-8b-instruct:free" },
-  { id: "mistral", name: "Mistral", defaultModel: "mistral-large-latest" },
+  { id: "groq", name: "Groq", defaultModel: "llama-3.1-8b-instant" },
   { id: "deepseek", name: "DeepSeek", defaultModel: "deepseek-chat" },
+  { id: "mistral", name: "Mistral", defaultModel: "mistral-large-latest" },
+  { id: "moonshot", name: "Moonshot AI", defaultModel: "moonshot-v1-8k" },
   { id: "cerebras", name: "Cerebras", defaultModel: "llama3.1-8b" },
+  { id: "ollama", name: "Ollama Cloud", defaultModel: "llama3.1" },
   { id: "other", name: "Other (OpenAI Compatible)", defaultModel: "" }
 ];
 
