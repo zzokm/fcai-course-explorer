@@ -845,7 +845,24 @@ export function AdvisorChatbot() {
                                   return <PrerequisiteTag code={code} chain={chain} variant="markdown" displayName={children} />;
                                 }
                                 return <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', fontWeight: 600 }} {...props}>{children}</a>;
-                              }
+                              },
+                              table: ({ node, children, ...props }) => (
+                                <div style={{ overflowX: 'auto', width: '100%', marginBottom: '1rem' }}>
+                                  <table style={{ borderCollapse: 'collapse', width: 'max-content' }} {...props}>
+                                    {children}
+                                  </table>
+                                </div>
+                              ),
+                              th: ({ node, children, ...props }) => (
+                                <th style={{ border: '1px solid color-mix(in srgb, var(--foreground) 20%, transparent)', padding: '0.5rem 0.75rem', backgroundColor: 'color-mix(in srgb, var(--foreground) 5%, transparent)', textAlign: 'left', fontWeight: 600 }} {...props}>
+                                  {children}
+                                </th>
+                              ),
+                              td: ({ node, children, ...props }) => (
+                                <td style={{ border: '1px solid color-mix(in srgb, var(--foreground) 15%, transparent)', padding: '0.5rem 0.75rem' }} {...props}>
+                                  {children}
+                                </td>
+                              )
                             }}
                           >
                             {linkifyCourses(m.content)}
