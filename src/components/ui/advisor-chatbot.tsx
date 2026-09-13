@@ -444,6 +444,10 @@ export function AdvisorChatbot() {
     
     setSessions(finalSessions);
     localStorage.setItem("advisor_sessions", JSON.stringify(finalSessions));
+    
+    if (lastActiveSession?.id === id) {
+      setLastActiveSession(null);
+    }
   };
 
   const saveTitle = (id: string) => {
