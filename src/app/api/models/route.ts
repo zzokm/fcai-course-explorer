@@ -12,12 +12,14 @@ export async function GET(req: Request) {
   try {
     let models: { id: string; name: string }[] = [];
 
-    if (["openai", "deepseek", "groq", "mistral", "cerebras", "other"].includes(provider)) {
+    if (["openai", "deepseek", "groq", "mistral", "cerebras", "moonshot", "ollama", "other"].includes(provider)) {
       let url = "https://api.openai.com/v1/models";
       if (provider === "deepseek") url = "https://api.deepseek.com/beta/models";
       if (provider === "groq") url = "https://api.groq.com/openai/v1/models";
       if (provider === "mistral") url = "https://api.mistral.ai/v1/models";
       if (provider === "cerebras") url = "https://api.cerebras.ai/v1/models";
+      if (provider === "moonshot") url = "https://api.moonshot.cn/v1/models";
+      if (provider === "ollama") url = (customBaseUrl ? customBaseUrl.replace(/\/$/, '') : "https://ollama.com/v1") + "/models";
       if (provider === "other" && customBaseUrl) url = `${customBaseUrl.replace(/\/$/, '')}/models`;
 
       const res = await fetch(url, {

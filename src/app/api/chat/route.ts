@@ -25,6 +25,8 @@ export function getProviderClient(provider: string, apiKey: string, customBaseUr
     case "groq":
     case "mistral":
     case "cerebras":
+    case "moonshot":
+    case "ollama":
     case "other":
       let baseURL = customBaseUrl || "";
       if (provider === "openrouter") baseURL = "https://openrouter.ai/api/v1";
@@ -32,6 +34,8 @@ export function getProviderClient(provider: string, apiKey: string, customBaseUr
       if (provider === "groq") baseURL = "https://api.groq.com/openai/v1";
       if (provider === "mistral") baseURL = "https://api.mistral.ai/v1";
       if (provider === "cerebras") baseURL = "https://api.cerebras.ai/v1";
+      if (provider === "moonshot") baseURL = "https://api.moonshot.cn/v1";
+      if (provider === "ollama") baseURL = customBaseUrl || "https://ollama.com/v1";
       
       return createOpenAI({ apiKey, baseURL: baseURL || undefined });
     default:
