@@ -688,6 +688,7 @@ export function AdvisorChatbot() {
                             placeholder="Select Model"
                             triggerStyle={{ background: 'transparent' }}
                             dropdownStyle={{ maxHeight: '200px' }}
+                            searchable={true}
                           />
                         </div>
                       </motion.div>

@@ -17,6 +17,7 @@ interface CustomDropdownProps {
   maxHeight?: string;
   triggerStyle?: React.CSSProperties;
   dropdownStyle?: React.CSSProperties;
+  searchable?: boolean;
 }
 
 export function CustomDropdown({ 
@@ -27,10 +28,18 @@ export function CustomDropdown({
   placeholder = "Select...", 
   maxHeight = "250px",
   triggerStyle,
-  dropdownStyle
+  dropdownStyle,
+  searchable = false
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSearchQuery("");
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -43,6 +52,9 @@ export function CustomDropdown({
   }, []);
 
   const selectedOption = options.find(o => o.id === value);
+  const filteredOptions = searchable 
+    ? options.filter(o => o.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : options;
 
   return (
     <div ref={ref} style={{ position: 'relative', width: '100%' }}>
@@ -75,7 +87,24 @@ export function CustomDropdown({
           maxHeight: maxHeight, overflowY: 'auto',
           ...dropdownStyle
         }}>
-          {options.length > 0 ? options.map((opt) => (
+          {searchable && (
+            <input 
+              autoFocus
+              type="text"
+              placeholder="Search options..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%', padding: '0.6rem 0.75rem', marginBottom: '0.5rem',
+                background: 'var(--background)', border: '1px solid var(--card-border-outer)',
+                borderRadius: '0.35rem', color: 'var(--foreground)',
+                fontFamily: 'inherit', fontSize: '0.85rem', outline: 'none'
+              }}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+            />
+          )}
+          {filteredOptions.length > 0 ? filteredOptions.map((opt) => (
             <button
               key={opt.id}
               onClick={() => {
