@@ -761,8 +761,34 @@ export function AdvisorChatbot() {
                             onClick={() => setShowAdminPin(true)} 
                             style={{ fontSize: '0.75rem', opacity: 0.5, cursor: 'pointer' }}
                           >
-                            Are you <strong>yehia</strong>?
+                            {savedAdminPin ? (
+                              <>Logged in as <strong>yehia</strong></>
+                            ) : (
+                              <>Are you <strong>yehia</strong>?</>
+                            )}
                           </span>
+                        ) : savedAdminPin ? (
+                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                            <button
+                              onClick={() => {
+                                localStorage.removeItem("adminPin");
+                                setSavedAdminPin(null);
+                                setShowAdminPin(false);
+                                setApiKey(""); // clear any ghost key state
+                                setIsTokenValid(null);
+                                setAvailableModels([]);
+                              }}
+                              style={{ ...btnPrimaryStyle, padding: '0.5rem 1rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}
+                            >
+                              Revert to standard API key
+                            </button>
+                            <button 
+                              onClick={() => setShowAdminPin(false)}
+                              style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--card-border-outer)', cursor: 'pointer', background: 'transparent', color: 'var(--foreground)' }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         ) : (
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                             <input 
