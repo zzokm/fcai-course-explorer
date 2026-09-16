@@ -404,3 +404,7 @@ body.chat-fullscreen-lock {
   background: rgba(128, 128, 128, 0.05);
   border-radius: 0 0.5rem 0.5rem 0;
 }
+
+.github-star-btn:hover {
+  background: var(--card-bg-outer) !important;
+}

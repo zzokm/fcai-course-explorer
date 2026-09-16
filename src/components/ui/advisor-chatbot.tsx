@@ -75,6 +75,8 @@ export function AdvisorChatbot() {
   const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
   const [availableModels, setAvailableModels] = useState<{id: string, name: string, isFree?: boolean}[]>([]);
   const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [showAdminPin, setShowAdminPin] = useState(false);
+  const [adminPin, setAdminPin] = useState("");
 
   // Multi-chat State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -621,10 +623,11 @@ export function AdvisorChatbot() {
                 /* Settings Screen */
                 <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
                   {ChatHeader}
-                  <div style={{ padding: '1.5rem' }}>
-                  <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', opacity: 0.7 }}>Bring your own key (BYOK) to use the advisor. Keys are stored securely in your browser's local storage.</p>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', opacity: 0.7 }}>Bring your own key (BYOK) to use the advisor. Keys are stored securely in your browser's local storage.</p>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{ position: 'relative' }}>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>AI Provider</label>
                       <CustomDropdown
@@ -722,15 +725,54 @@ export function AdvisorChatbot() {
                         )}
                       </motion.div>
                     )}
-                  </div>
+                      </div>
+                    </div>
 
-                  <button 
-                    onClick={saveSettings} 
-                    disabled={!isTokenValid}
-                    style={{ ...btnPrimaryStyle, width: '100%', padding: '0.875rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', marginTop: '2rem', opacity: !isTokenValid ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-                  >
-                    <CheckCircle size={20} /> Save Configuration
-                  </button>
+                    <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+                      <button 
+                        onClick={saveSettings} 
+                        disabled={!isTokenValid}
+                        style={{ ...btnPrimaryStyle, width: '100%', padding: '0.875rem', border: 'none', borderRadius: '0.75rem', fontWeight: 600, cursor: 'pointer', opacity: !isTokenValid ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                      >
+                        <CheckCircle size={20} /> Save Configuration
+                      </button>
+                      
+                      <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+                        {!showAdminPin ? (
+                          <span 
+                            onClick={() => setShowAdminPin(true)} 
+                            style={{ fontSize: '0.75rem', opacity: 0.5, cursor: 'pointer' }}
+                          >
+                            Are you <strong>yehia</strong>?
+                          </span>
+                        ) : (
+                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                            <input 
+                              type="password" 
+                              value={adminPin}
+                              onChange={(e) => setAdminPin(e.target.value)}
+                              placeholder="PIN"
+                              style={{ ...inputStyle, width: '100px', padding: '0.5rem', borderRadius: '0.5rem', fontSize: '0.875rem', outline: 'none', textAlign: 'center' }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  setProvider("google");
+                                  setApiKey(adminPin);
+                                }
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                setProvider("google");
+                                setApiKey(adminPin);
+                              }}
+                              style={{ ...btnPrimaryStyle, padding: '0.5rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
+                            >
+                              <CheckCircle size={16} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               ) : view === "history" ? (

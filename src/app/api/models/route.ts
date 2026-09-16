@@ -8,6 +8,12 @@ export async function GET(req: Request) {
   if (!apiKey) {
     return NextResponse.json({ error: "No API key provided" }, { status: 401 });
   }
+  
+  // Admin PIN Bypass
+  let actualApiKey = apiKey;
+  if (process.env.ADMIN_PIN && actualApiKey === process.env.ADMIN_PIN && provider === "google") {
+    actualApiKey = process.env.GOOGLE_API_KEY as string;
+  }
 
   try {
     let models: { id: string; name: string }[] = [];
@@ -23,7 +29,7 @@ export async function GET(req: Request) {
       if (provider === "other" && customBaseUrl) url = `${customBaseUrl.replace(/\/$/, '')}/models`;
 
       const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${apiKey}` },
+        headers: { Authorization: `Bearer ${actualApiKey}` },
       });
       if (!res.ok) throw new Error(`Invalid ${provider} key`);
       const data = await res.json();
@@ -33,7 +39,7 @@ export async function GET(req: Request) {
     }
     else if (provider === "openrouter") {
       const res = await fetch("https://openrouter.ai/api/v1/models", {
-        headers: { Authorization: `Bearer ${apiKey}` },
+        headers: { Authorization: `Bearer ${actualApiKey}` },
       });
       if (!res.ok) throw new Error("Invalid OpenRouter key");
       const data = await res.json();
@@ -47,7 +53,7 @@ export async function GET(req: Request) {
       });
     }
     else if (provider === "google") {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${actualApiKey}`);
       if (!res.ok) throw new Error("Invalid Gemini key");
       const data = await res.json();
       models = data.models
@@ -60,7 +66,7 @@ export async function GET(req: Request) {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
-          "x-api-key": apiKey,
+          "x-api-key": actualApiKey,
           "anthropic-version": "2023-06-01",
           "content-type": "application/json"
         },

@@ -57,6 +57,12 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ error: "No API key provided. Please set it in settings." }), { status: 401 });
   }
 
+  // Admin PIN Bypass
+  let actualApiKey = apiKey;
+  if (process.env.ADMIN_PIN && actualApiKey === process.env.ADMIN_PIN && provider === "google") {
+    actualApiKey = process.env.GOOGLE_API_KEY as string;
+  }
+
   try {
     let contextText = "";
     
@@ -119,8 +125,8 @@ export async function POST(req: Request) {
     </CONTEXT>`;
 
 
-    // 4. Call the selected provider using BYOK
-    const customProvider = getProviderClient(provider, apiKey, customBaseUrl);
+    // 4. Call the selected provider using BYOK (or Admin bypassed key)
+    const customProvider = getProviderClient(provider, actualApiKey, customBaseUrl);
     
     const result = await streamText({
       model: customProvider(modelName),
