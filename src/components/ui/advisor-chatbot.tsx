@@ -267,7 +267,9 @@ export function AdvisorChatbot() {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = Math.min(scrollHeight, 120) + 'px';
+      textareaRef.current.style.overflowY = scrollHeight > 120 ? 'auto' : 'hidden';
     }
   }, [input]);
 
@@ -1023,7 +1025,7 @@ export function AdvisorChatbot() {
                         fontSize: '0.875rem', 
                         outline: 'none',
                         resize: 'none',
-                        overflowY: 'auto',
+                        overflowY: 'hidden',
                         minHeight: '44px',
                         maxHeight: '120px',
                         lineHeight: '1.5',
