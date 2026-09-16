@@ -57,9 +57,9 @@ export async function GET(req: Request) {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${actualApiKey}`);
       if (!res.ok) throw new Error("Invalid Gemini key");
       const data = await res.json();
-      models = data.models
-        .filter((m: any) => m.name.includes("gemini") && m.supportedGenerationMethods.includes("generateContent"))
-        .map((m: any) => ({ id: m.name.replace("models/", ""), name: m.displayName || m.name }));
+      models = (data.models || [])
+        .filter((m: any) => m.name && m.name.includes("gemini"))
+        .map((m: any) => ({ id: m.name.replace("models/", ""), name: m.displayName || m.name.replace("models/", "") }));
     }
     else if (provider === "anthropic") {
       // Anthropic does not have a public models list endpoint that works with standard API keys in the same way,
