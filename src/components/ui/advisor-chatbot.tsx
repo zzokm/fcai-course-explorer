@@ -86,8 +86,9 @@ export function AdvisorChatbot() {
   const [editingTitle, setEditingTitle] = useState("");
   const [hoveredSessionId, setHoveredSessionId] = useState<string | null>(null);
 
-  const [lastActiveSession, setLastActiveSession] = useState<ChatSession | null>(null);
+  const [lastActiveSession, setLastActiveSession] = useState<ChatSession | null>(null);  // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Animated Pill Text State
   const phrases = ["Have a question?", "Need course advice?", "Confused?", "Ask AI"];
@@ -261,6 +262,14 @@ export function AdvisorChatbot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [input]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -990,19 +999,41 @@ export function AdvisorChatbot() {
                   </div>
 
                   {/* Input Form */}
-                  <form onSubmit={handleSubmit} style={{ padding: '1rem', borderTop: '1px solid var(--card-border-outer)', display: 'flex', gap: '0.5rem', background: 'var(--card-bg-outer)', borderBottomLeftRadius: '1.5rem', borderBottomRightRadius: '1.5rem' }}>
-                    <input
-                      type="text"
+                  <form onSubmit={handleSubmit} style={{ padding: '1rem', borderTop: '1px solid var(--card-border-outer)', display: 'flex', gap: '0.5rem', background: 'var(--card-bg-outer)', borderBottomLeftRadius: '1.5rem', borderBottomRightRadius: '1.5rem', alignItems: 'flex-end' }}>
+                    <textarea
+                      ref={textareaRef}
                       dir="auto"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          if ((input || '').trim() && !isLoading) {
+                            handleSubmit(e as any);
+                          }
+                        }
+                      }}
+                      rows={1}
                       placeholder="Ask about bylaws or courses..."
-                      style={{ ...inputStyle, flex: 1, padding: '0.75rem 1rem', borderRadius: '9999px', fontSize: '0.875rem', outline: 'none' }}
+                      style={{ 
+                        ...inputStyle, 
+                        flex: 1, 
+                        padding: '0.75rem 1rem', 
+                        borderRadius: '1.25rem', 
+                        fontSize: '0.875rem', 
+                        outline: 'none',
+                        resize: 'none',
+                        overflowY: 'auto',
+                        minHeight: '44px',
+                        maxHeight: '120px',
+                        lineHeight: '1.5',
+                        display: 'block'
+                      }}
                     />
                     <button 
                       type="submit" 
                       disabled={!(input || '').trim() || isLoading}
-                      style={{ ...btnPrimaryStyle, width: '2.5rem', height: '2.5rem', padding: 0, borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: !(input || '').trim() || isLoading ? 'default' : 'pointer', opacity: !(input || '').trim() || isLoading ? 0.5 : 1 }}
+                      style={{ ...btnPrimaryStyle, width: '2.5rem', height: '2.5rem', padding: 0, borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: !(input || '').trim() || isLoading ? 'default' : 'pointer', opacity: !(input || '').trim() || isLoading ? 0.5 : 1, flexShrink: 0, marginBottom: '0.125rem' }}
                     >
                       <PaperPlaneRight size={18} weight="fill" />
                     </button>
