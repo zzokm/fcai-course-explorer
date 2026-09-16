@@ -4,14 +4,15 @@ export async function GET(req: Request) {
   const provider = req.headers.get("x-provider") || "openai";
   const apiKey = req.headers.get("x-api-key");
   const customBaseUrl = req.headers.get("x-base-url") || undefined;
+  const adminPin = req.headers.get("x-admin-pin");
 
-  if (!apiKey) {
+  if (!apiKey && !adminPin) {
     return NextResponse.json({ error: "No API key provided" }, { status: 401 });
   }
   
   // Admin PIN Bypass
-  let actualApiKey = apiKey;
-  if (process.env.ADMIN_PIN && actualApiKey === process.env.ADMIN_PIN && provider === "google") {
+  let actualApiKey = apiKey || "";
+  if (process.env.ADMIN_PIN && adminPin === process.env.ADMIN_PIN && provider === "google") {
     actualApiKey = process.env.GOOGLE_API_KEY as string;
   }
 

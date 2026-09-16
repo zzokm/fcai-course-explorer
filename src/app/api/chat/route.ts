@@ -52,14 +52,15 @@ export async function POST(req: Request) {
   const apiKey = req.headers.get("x-api-key");
   const modelName = req.headers.get("x-model") || "gpt-4o-mini";
   const customBaseUrl = req.headers.get("x-base-url") || undefined;
+  const adminPin = req.headers.get("x-admin-pin");
 
-  if (!apiKey) {
+  if (!apiKey && !adminPin) {
     return new Response(JSON.stringify({ error: "No API key provided. Please set it in settings." }), { status: 401 });
   }
 
   // Admin PIN Bypass
-  let actualApiKey = apiKey;
-  if (process.env.ADMIN_PIN && actualApiKey === process.env.ADMIN_PIN && provider === "google") {
+  let actualApiKey = apiKey || "";
+  if (process.env.ADMIN_PIN && adminPin === process.env.ADMIN_PIN && provider === "google") {
     actualApiKey = process.env.GOOGLE_API_KEY as string;
   }
 

@@ -77,6 +77,7 @@ export function AdvisorChatbot() {
   const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [showAdminPin, setShowAdminPin] = useState(false);
   const [adminPin, setAdminPin] = useState("");
+  const [savedAdminPin, setSavedAdminPin] = useState<string | null>(null);
 
   // Multi-chat State
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -117,12 +118,14 @@ export function AdvisorChatbot() {
     const savedProvider = localStorage.getItem("advisor_provider");
     const savedKey = localStorage.getItem("advisor_api_key");
     const savedModel = localStorage.getItem("advisor_model");
-    const savedCustomUrl = localStorage.getItem("advisor_custom_url");
+    const savedBaseUrl = localStorage.getItem("advisor_base_url") || localStorage.getItem("advisor_custom_url");
+    const storedAdminPin = localStorage.getItem("adminPin");
     
     if (savedProvider) setProvider(savedProvider);
     if (savedKey) setApiKey(savedKey);
     if (savedModel) setModel(savedModel);
-    if (savedCustomUrl) setCustomBaseUrl(savedCustomUrl);
+    if (savedBaseUrl) setCustomBaseUrl(savedBaseUrl);
+    if (storedAdminPin) setSavedAdminPin(storedAdminPin);
 
     const savedSessionsStr = localStorage.getItem("advisor_sessions");
     let loadedSessions: ChatSession[] = [];
@@ -180,7 +183,7 @@ export function AdvisorChatbot() {
 
   // Auto-check Token logic
   useEffect(() => {
-    if (!apiKey || apiKey.length < 5) {
+    if ((!apiKey || apiKey.length < 5) && !savedAdminPin) {
       setIsTokenValid(null);
       setAvailableModels([]);
       return;
@@ -194,6 +197,7 @@ export function AdvisorChatbot() {
           headers: {
             "x-provider": provider,
             "x-api-key": apiKey,
+            ...(savedAdminPin ? { "x-admin-pin": savedAdminPin } : {}),
             ...(provider === "other" && customBaseUrl ? { "x-base-url": customBaseUrl } : {})
           }
         });
@@ -220,7 +224,30 @@ export function AdvisorChatbot() {
 
     const timer = setTimeout(checkToken, 800);
     return () => clearTimeout(timer);
-  }, [apiKey, provider, customBaseUrl]); // Re-run if key, provider, or url changes
+  }, [apiKey, provider, customBaseUrl, savedAdminPin]); // Re-run if key, provider, url, or adminPin changes
+
+  const verifyAdmin = async (pinToVerify?: string) => {
+    const pin = pinToVerify || adminPin;
+    if (!pin) return false;
+    try {
+      const res = await fetch("/api/verify-pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin })
+      });
+      if (res.ok) {
+        setSavedAdminPin(pin);
+        localStorage.setItem("adminPin", pin);
+        setShowAdminPin(false);
+        setAdminPin("");
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
 
   const createNewSession = () => {
     // If the current session is already empty, just switch to it and don't create duplicates
@@ -285,10 +312,11 @@ export function AdvisorChatbot() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-provider": provider,
           "x-api-key": apiKey,
+          "x-provider": provider,
           "x-model": model,
-          ...(provider === "other" && customBaseUrl ? { "x-base-url": customBaseUrl } : {})
+          ...(savedAdminPin ? { "x-admin-pin": savedAdminPin } : {}),
+          ...(customBaseUrl && provider === "other" ? { "x-base-url": customBaseUrl } : {})
         },
         body: JSON.stringify({ messages: newMessages })
       });
@@ -627,6 +655,13 @@ export function AdvisorChatbot() {
                     <div style={{ flex: 1 }}>
                       <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', opacity: 0.7 }}>Bring your own key (BYOK) to use the advisor. Keys are stored securely in your browser's local storage.</p>
                       
+                      {savedAdminPin && (
+                        <div style={{ marginBottom: '1.5rem', padding: '0.75rem', background: 'var(--success-bg, rgba(0, 200, 83, 0.1))', color: 'var(--success-text, #00c853)', borderRadius: '0.5rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <CheckCircle weight="fill" size={18} />
+                          Authenticated as Admin (Google Gemini bypass enabled)
+                        </div>
+                      )}
+
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{ position: 'relative' }}>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>AI Provider</label>
@@ -753,17 +788,33 @@ export function AdvisorChatbot() {
                               onChange={(e) => setAdminPin(e.target.value)}
                               placeholder="PIN"
                               style={{ ...inputStyle, width: '130px', padding: '0.5rem', borderRadius: '0.5rem', fontSize: '1rem', outline: 'none', textAlign: 'center', letterSpacing: '0.15em' }}
-                              onKeyDown={(e) => {
+                              onKeyDown={async (e) => {
                                 if (e.key === 'Enter') {
-                                  setProvider("google");
-                                  setApiKey(adminPin);
+                                  try {
+                                    const res = await fetch("/api/admin/verify", { method: "POST", body: JSON.stringify({ pin: adminPin }) });
+                                    if (res.ok) {
+                                      localStorage.setItem("adminPin", adminPin);
+                                      setSavedAdminPin(adminPin);
+                                      setProvider("google");
+                                      setApiKey("");
+                                      setShowAdminPin(false);
+                                    } else alert("Invalid PIN");
+                                  } catch(e) { alert("Error"); }
                                 }
                               }}
                             />
                             <button
-                              onClick={() => {
-                                setProvider("google");
-                                setApiKey(adminPin);
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch("/api/admin/verify", { method: "POST", body: JSON.stringify({ pin: adminPin }) });
+                                  if (res.ok) {
+                                    localStorage.setItem("adminPin", adminPin);
+                                    setSavedAdminPin(adminPin);
+                                    setProvider("google");
+                                    setApiKey("");
+                                    setShowAdminPin(false);
+                                  } else alert("Invalid PIN");
+                                } catch(e) { alert("Error"); }
                               }}
                               style={{ ...btnPrimaryStyle, padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
                             >
