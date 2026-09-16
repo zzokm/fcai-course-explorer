@@ -658,7 +658,7 @@ export function AdvisorChatbot() {
                       {savedAdminPin && (
                         <div style={{ marginBottom: '1.5rem', padding: '0.75rem', background: 'var(--success-bg, rgba(0, 200, 83, 0.1))', color: 'var(--success-text, #00c853)', borderRadius: '0.5rem', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <CheckCircle weight="fill" size={18} />
-                          Authenticated as Admin (Google Gemini bypass enabled)
+                          Authenticated as Admin
                         </div>
                       )}
 
@@ -678,27 +678,29 @@ export function AdvisorChatbot() {
                       />
                     </div>
 
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>API Key</label>
-                      <div style={{ position: 'relative' }}>
-                        <input 
-                          type="password" 
-                          value={apiKey} 
-                          onChange={(e) => setApiKey(e.target.value)}
-                          placeholder={`Enter your ${PROVIDERS.find(p => p.id === provider)?.name} key...`}
-                          style={{ ...inputStyle, width: '100%', padding: '0.75rem 2.5rem 0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.875rem', outline: 'none' }}
-                        />
-                        <div style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
-                          {isCheckingToken ? (
-                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ width: 16, height: 16, border: '2px solid var(--foreground-muted)', borderTopColor: 'transparent', borderRadius: '50%' }} />
-                          ) : isTokenValid === true ? (
-                            <CheckCircle size={18} weight="fill" color="#10b981" />
-                          ) : isTokenValid === false ? (
-                            <X size={18} weight="bold" color="#ef4444" />
-                          ) : null}
+                    {!savedAdminPin && (
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>API Key</label>
+                        <div style={{ position: 'relative' }}>
+                          <input 
+                            type="password" 
+                            value={apiKey} 
+                            onChange={(e) => setApiKey(e.target.value)}
+                            placeholder={`Enter your ${PROVIDERS.find(p => p.id === provider)?.name} key...`}
+                            style={{ ...inputStyle, width: '100%', padding: '0.75rem 2.5rem 0.75rem 1rem', borderRadius: '0.75rem', fontSize: '0.875rem', outline: 'none' }}
+                          />
+                          <div style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
+                            {isCheckingToken ? (
+                              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ width: 16, height: 16, border: '2px solid var(--foreground-muted)', borderTopColor: 'transparent', borderRadius: '50%' }} />
+                            ) : isTokenValid === true ? (
+                              <CheckCircle size={18} weight="fill" color="#10b981" />
+                            ) : isTokenValid === false ? (
+                              <X size={18} weight="bold" color="#ef4444" />
+                            ) : null}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     {provider === "other" && (
                       <div>
@@ -713,15 +715,20 @@ export function AdvisorChatbot() {
                       </div>
                     )}
 
-                    {/* Show Model Name only if Token is Valid */}
-                    {isTokenValid && (
+                    {/* Show Model Name only if Token is Valid or Admin Authenticated */}
+                    {(isTokenValid || savedAdminPin) && (
                       <motion.div 
                         initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
                         animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        style={{ position: 'relative' }}
                       >
-                        <div style={{ position: 'relative' }}>
-                          <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>Model</label>
+                        <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                          <span>Model</span>
+                          {isCheckingToken && (
+                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ width: 14, height: 14, border: '2px solid var(--foreground-muted)', borderTopColor: 'transparent', borderRadius: '50%' }} />
+                          )}
+                        </label>
                           
                           <CustomDropdown
                             value={model}
