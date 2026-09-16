@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple, ArrowsOutSimple, ArrowsInSimple } from "@phosphor-icons/react";
+import { ChatTeardropText, X, Gear, PaperPlaneRight, WarningCircle, CheckCircle, List, Plus, CaretLeft, CaretDown, PencilSimple, ArrowsOutSimple, ArrowsInSimple, ArrowRight } from "@phosphor-icons/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -752,7 +752,7 @@ export function AdvisorChatbot() {
                               value={adminPin}
                               onChange={(e) => setAdminPin(e.target.value)}
                               placeholder="PIN"
-                              style={{ ...inputStyle, width: '100px', padding: '0.5rem', borderRadius: '0.5rem', fontSize: '0.875rem', outline: 'none', textAlign: 'center' }}
+                              style={{ ...inputStyle, width: '130px', padding: '0.5rem', borderRadius: '0.5rem', fontSize: '1rem', outline: 'none', textAlign: 'center', letterSpacing: '0.15em' }}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                   setProvider("google");
@@ -765,9 +765,9 @@ export function AdvisorChatbot() {
                                 setProvider("google");
                                 setApiKey(adminPin);
                               }}
-                              style={{ ...btnPrimaryStyle, padding: '0.5rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
+                              style={{ ...btnPrimaryStyle, padding: '0.5rem 0.75rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}
                             >
-                              <CheckCircle size={16} />
+                              <ArrowRight size={16} weight="bold" />
                             </button>
                           </div>
                         )}
