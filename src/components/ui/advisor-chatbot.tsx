@@ -226,29 +226,6 @@ export function AdvisorChatbot() {
     return () => clearTimeout(timer);
   }, [apiKey, provider, customBaseUrl, savedAdminPin]); // Re-run if key, provider, url, or adminPin changes
 
-  const verifyAdmin = async (pinToVerify?: string) => {
-    const pin = pinToVerify || adminPin;
-    if (!pin) return false;
-    try {
-      const res = await fetch("/api/verify-pin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin })
-      });
-      if (res.ok) {
-        setSavedAdminPin(pin);
-        localStorage.setItem("adminPin", pin);
-        setShowAdminPin(false);
-        setAdminPin("");
-        return true;
-      }
-      return false;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
-
   const createNewSession = () => {
     // If the current session is already empty, just switch to it and don't create duplicates
     const currentSession = sessions.find(s => s.id === currentSessionId);
@@ -745,7 +722,6 @@ export function AdvisorChatbot() {
                             dropdownStyle={{ maxHeight: '200px' }}
                             searchable={true}
                           />
-                        </div>
                         {provider === "openrouter" && availableModels.length > 0 && (
                           <div style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <input
