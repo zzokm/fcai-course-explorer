@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   // Admin PIN Bypass
   let actualApiKey = apiKey || "";
   if (process.env.ADMIN_PIN && adminPin === process.env.ADMIN_PIN && provider === "google") {
-    actualApiKey = process.env.GOOGLE_API_KEY as string;
+    actualApiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY as string;
   }
 
   try {
