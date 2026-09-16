@@ -15,9 +15,4 @@ Run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
-
-## Project Structure
-- `src/app/`: Next.js App Router root layout and page
-- `data/`: Course data specifications, bylaws, and translation files
-- `.agents/skills/`: Integrated agent skills (`impeccable`, `taste`, `frontend-design`, `web-design-guidelines`, `high-end-visual-design`, `design-taste-frontend`)
+**Live URL**: https://majors.yehia.dev
