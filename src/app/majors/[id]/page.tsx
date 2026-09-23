@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { PrerequisiteTag } from "@/components/ui/prerequisite-tag";
 import { MajorDropdown } from "@/components/ui/major-dropdown";
 import { ElectiveInfo } from "@/components/ui/elective-info";
-import { ArrowLeft, Clock, Tag, CaretDown, Cpu, Database, Brain, ChartLineUp, DesktopTower } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, Clock, Tag, CaretDown, Cpu, Database, Brain, ChartLineUp, DesktopTower, Star } from "@phosphor-icons/react/dist/ssr";
 
 const majorNames: Record<string, string> = {
   Computer_Science: "Computer Science",
@@ -120,12 +120,24 @@ export default async function MajorPage({ params }: { params: { id: string } }) 
         borderBottom: '1px solid var(--card-border-outer)',
         padding: '1rem 0'
       }}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="container" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 500, opacity: 0.8 }}>
             <ArrowLeft size={20} />
             Home
           </Link>
           
+          <div className="header-star-container">
+            <a
+              href="https://github.com/zzokm/fcai-course-explorer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-star-btn"
+            >
+              <Star weight="fill" size={14} color="#eab308" className="star-icon" />
+              <span>Star on GitHub</span>
+            </a>
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <MajorDropdown currentId={id} />
             <ThemeToggle style={{ position: 'relative', top: 'auto', right: 'auto' }} />

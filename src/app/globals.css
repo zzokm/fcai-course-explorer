@@ -405,6 +405,85 @@ body.chat-fullscreen-lock {
   border-radius: 0 0.5rem 0.5rem 0;
 }
 
+.github-star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--card-bg-inner);
+  border: 1px solid var(--card-border-inner);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
 .github-star-btn:hover {
   background: var(--card-bg-outer) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.star-icon {
+  color: #eab308 !important;
+  fill: #eab308 !important;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.github-star-btn:hover .star-icon {
+  transform: scale(1.2) rotate(12deg);
+}
+
+/* Made by and star button positioning */
+.author-credits {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.author-credits:hover {
+  opacity: 1;
+}
+
+/* Header star repo button on majors pages */
+.header-star-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .author-credits {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    opacity: 0.85;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .header-star-container {
+    display: none !important;
+  }
 }
