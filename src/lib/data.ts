@@ -97,11 +97,11 @@ export function getAllCourses(): Course[] {
 }
 
 export const MIN_GRADES = {
-  Information_Systems: 2.70,
-  Computer_Science: 2.56,
-  Artificial_Intelligence: 2.39,
-  Decision_Support: 1.60,
-  Information_Technology: 1.51,
+  Information_Systems: 2.61,
+  Artificial_Intelligence: 2.56,
+  Computer_Science: 2.51,
+  Information_Technology: 1.56,
+  Decision_Support: 1.49,
 };
 
 export interface PrereqNode {

@@ -178,7 +178,7 @@ export function Disclaimer() {
               {/* Body */}
               <div style={{ fontSize: "0.95rem", lineHeight: 1.65, color: "var(--foreground)", opacity: 0.9 }}>
                 <p style={{ margin: "0 0 0.85rem" }}>
-                  The minimum GPA values shown are based on last year's admissions and will be updated once this year's minimums are officially confirmed.
+                  The minimum GPA values shown reflect the official admission thresholds for the <strong>Senior 2028 batch</strong> (Class of 2028).
                 </p>
                 <p style={{ margin: "0 0 0.85rem" }}>
                   All course information on this site, including prerequisites, credit hours, and section requirements, is extracted directly from the official college bylaws.

@@ -16,13 +16,6 @@ export const majors = [
     icon: <Database size={32} weight="light" />,
   },
   {
-    id: "Computer_Science",
-    title: "Computer Science",
-    grade: MIN_GRADES.Computer_Science,
-    desc: "Dive deep into algorithms, architecture, and the core of computation.",
-    icon: <Cpu size={32} weight="light" />,
-  },
-  {
     id: "Artificial_Intelligence",
     title: "Artificial Intelligence",
     grade: MIN_GRADES.Artificial_Intelligence,
@@ -30,11 +23,11 @@ export const majors = [
     icon: <Brain size={32} weight="light" />,
   },
   {
-    id: "Decision_Support_and_Operations_Research",
-    title: "Decision Support & Operations Research",
-    grade: MIN_GRADES.Decision_Support,
-    desc: "Leverage big data, operations research, and predictive models.",
-    icon: <ChartLineUp size={32} weight="light" />,
+    id: "Computer_Science",
+    title: "Computer Science",
+    grade: MIN_GRADES.Computer_Science,
+    desc: "Dive deep into algorithms, architecture, and the core of computation.",
+    icon: <Cpu size={32} weight="light" />,
   },
   {
     id: "Information_Technology",
@@ -42,6 +35,13 @@ export const majors = [
     grade: MIN_GRADES.Information_Technology,
     desc: "Master the infrastructure, networks, and systems that power the modern world.",
     icon: <DesktopTower size={32} weight="light" />,
+  },
+  {
+    id: "Decision_Support_and_Operations_Research",
+    title: "Decision Support & Operations Research",
+    grade: MIN_GRADES.Decision_Support,
+    desc: "Leverage big data, operations research, and predictive models.",
+    icon: <ChartLineUp size={32} weight="light" />,
   },
 ];
 

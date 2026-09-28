@@ -105,17 +105,17 @@ export async function POST(req: Request) {
     6. COURSE CODES: Whenever you mention a course name, you MUST append its course code in parentheses next to it (e.g., "Database Management Systems (IS312)"). Do NOT format them as markdown links, just provide the text and the code.
     
     <ALWAYS_AVAILABLE_FACTS>
-    ## Minimum Cumulative GPA Requirements for Major Selection (FCAI)
+    ## Minimum Cumulative GPA Requirements for Major Selection (FCAI) - Senior 2028 Batch
     
-    These are the **official minimum GPA thresholds** a student must meet to be eligible for each major. These values are fixed until officially updated.
+    These are the **official minimum GPA thresholds** a student must meet to be eligible for each major for the Senior 2028 batch (Class of 2028).
     
     | Major | Minimum GPA |
     |---|---|
-    | Information Systems (IS) | 2.70 |
-    | Computer Science (CS) | 2.56 |
-    | Artificial Intelligence (AI) | 2.39 |
-    | Decision Support & Operations Research (DS/OR) | 1.60 |
-    | Information Technology (IT) | 1.51 |
+    | Information Systems (IS) | 2.61 |
+    | Artificial Intelligence (AI) | 2.56 |
+    | Computer Science (CS) | 2.51 |
+    | Information Technology (IT) | 1.56 |
+    | Decision Support & Operations Research (DS/OR) | 1.49 |
     
     If a student's GPA meets or exceeds a major's minimum, they are eligible to select it. If their GPA is below the threshold, they are generally not eligible unless policies change.
     When a student asks about their options given a GPA, you MUST compare their GPA against this table and list every major they qualify for.
