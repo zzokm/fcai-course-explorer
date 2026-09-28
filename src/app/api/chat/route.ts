@@ -103,11 +103,11 @@ export async function POST(req: Request) {
     4. ACCURACY: Answer the user's questions based ONLY on the following official context from the bylaws and course data.
     5. UNKNOWN INFO: If the answer is not contained in the context, clearly state that you do not know or cannot find it in the official documents. Do NOT make up information.
     6. COURSE CODES: Whenever you mention a course name, you MUST append its course code in parentheses next to it (e.g., "Database Management Systems (IS312)"). Do NOT format them as markdown links, just provide the text and the code.
+    7. DO NOT VOLUNTEER MINIMUM GPAS: Do NOT bring up, list, or mention department minimum GPAs or cutoff scores unless the user explicitly asks about GPAs, department minimums, or whether their GPA qualifies them for a major. When answering questions about course descriptions, prerequisites, bylaws, careers, or majors in general, answer directly without bringing up minimum GPAs. Stop wasting tokens discussing minimums unless asked.
     
-    <ALWAYS_AVAILABLE_FACTS>
-    ## Minimum Cumulative GPA Requirements for Major Selection (FCAI) - Senior 2028 Batch
-    
-    These are the **official minimum GPA thresholds** a student must meet to be eligible for each major for the Senior 2028 batch (Class of 2028).
+    <MINIMUM_GPA_REFERENCE>
+    ## Department Minimum GPA Requirements (Senior 2028 Batch - Reference Only)
+    STRICT RULE: Use this reference ONLY when the user explicitly asks about GPA requirements, cutoff grades, or major eligibility based on their GPA. Do NOT voluntarily recite these values if not asked.
     
     | Major | Minimum GPA |
     |---|---|
@@ -117,9 +117,8 @@ export async function POST(req: Request) {
     | Information Technology (IT) | 1.56 |
     | Decision Support & Operations Research (DS/OR) | 1.49 |
     
-    If a student's GPA meets or exceeds a major's minimum, they are eligible to select it. If their GPA is below the threshold, they are generally not eligible unless policies change.
-    When a student asks about their options given a GPA, you MUST compare their GPA against this table and list every major they qualify for.
-    </ALWAYS_AVAILABLE_FACTS>
+    If the user explicitly asks about their GPA eligibility: Compare their GPA against this table and concisely list which majors they qualify for.
+    </MINIMUM_GPA_REFERENCE>
 
     <CONTEXT>
     ${contextText}
